@@ -99,7 +99,8 @@ export function SidebarRoot({
 }: SidebarRootComponentProps) {
   const panels = usePanels(snapshot => snapshot)
   const workbenchActive = usePanelInfo(info => info.activePanelId === 'workbench')
-  const localProject = usePanelInfo(info => info.activePanelId === null) && process.env.DSH_CLIENT_TITLE === 'AI.pm工作台'
+  const localProject = usePanelInfo(info => info.activePanelId === null)
+    && ['AI.pm工作台', 'zhang.workbench'].includes(process.env.DSH_CLIENT_TITLE ?? '')
   const shortcut = useShortcuts(rows => rows.find(row => row.id === 'sidebar.left.toggle'))
   const newShortcut = useShortcuts(rows => rows.find(row => row.id === 'session.new'))
   const toggleLabel = collapsed ? t('toggle.open') : t('toggle.collapse')

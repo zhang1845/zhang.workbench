@@ -686,8 +686,8 @@ describe('ConversationRoot resident composer', () => {
     expect(b.slotCalls).toContain('conversation.hero.agentPreset')
   })
 
-  it('hides the preset selector in the local AI.pm project while retaining workspace and input', () => {
-    vi.stubEnv('DSH_CLIENT_TITLE', 'AI.pm工作台')
+  it.each(['AI.pm工作台', 'zhang.workbench'])('hides the preset selector in %s while retaining workspace and input', (title) => {
+    vi.stubEnv('DSH_CLIENT_TITLE', title)
     try {
       const b = mount(sessionSnapshotOf({ blank: true }))
       expect(b.slotCalls).not.toContain('conversation.hero.agentPreset')

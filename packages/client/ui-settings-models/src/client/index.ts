@@ -80,7 +80,7 @@ export function apply(ctx: ClientContext): void {
   const page = globalThis as Partial<Record<typeof ONBOARDING_CONFIG_GLOBAL, unknown>>
   const payload = page[ONBOARDING_CONFIG_GLOBAL]
   const configured = Config(payload === undefined ? {} : payload)
-  const localWorkbench = process.env.DSH_CLIENT_TITLE === 'AI.pm工作台'
+  const localWorkbench = ['AI.pm工作台', 'zhang.workbench'].includes(process.env.DSH_CLIENT_TITLE ?? '')
   const credentialOnboarding = configured.credentialOnboarding && (localWorkbench || !('dshDesktop' in globalThis))
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-settings-models: copy dictionaries')
 

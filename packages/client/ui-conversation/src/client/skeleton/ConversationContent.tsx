@@ -27,7 +27,7 @@ export function ConversationContent(props: ConversationContentProps) {
     selectWorkspace, t, useFactorySlot,
   } = props
   const session = useSession(snapshot => snapshot)
-  const localProject = process.env.DSH_CLIENT_TITLE === 'AI.pm工作台' && props.variant === 'main'
+  const localProject = ['AI.pm工作台', 'zhang.workbench'].includes(process.env.DSH_CLIENT_TITLE ?? '') && props.variant === 'main'
   const Views = useFactorySlot('views', ConversationSessionView)
   const WidthControls = useFactorySlot('widthControls', NoConversationWidthControls)
   const [body, setBody] = useState<HTMLDivElement | null>(null)

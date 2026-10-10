@@ -17,7 +17,7 @@ export function ConversationHeader({
   const session = useSession(s => s)
   const conversation = useConversation(s => s)
   const project = useWorkspaces(s => s.items.find(item => sessionId !== undefined && item.sessionIds.includes(sessionId)))
-  const localProject = process.env.DSH_CLIENT_TITLE === 'AI.pm工作台'
+  const localProject = ['AI.pm工作台', 'zhang.workbench'].includes(process.env.DSH_CLIENT_TITLE ?? '')
   const blank = session === undefined || conversation === undefined
     || (session.blank && conversationPhase(session, conversation) === 'blank')
   return (
