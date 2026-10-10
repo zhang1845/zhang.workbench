@@ -185,6 +185,8 @@ describe('desktop welcome window', () => {
     expect(needsWelcome({ loggedIn: false, hasApiKey: false })).toBe(true)
     expect(needsWelcome({ loggedIn: false, hasApiKey: true })).toBe(false)
     expect(needsWelcome({ loggedIn: true, hasApiKey: true })).toBe(false)
+    expect(needsWelcome({ loggedIn: false, hasApiKey: false }, false)).toBe(false)
+    expect(needsWelcome({ loggedIn: true, hasApiKey: false }, false)).toBe(false)
   })
 })
 

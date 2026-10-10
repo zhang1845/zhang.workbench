@@ -1,6 +1,24 @@
-# DeepSeek Harness
+# zhang.workbench
 
 [English](README.md) | 中文
+
+`zhang.workbench` V0.1 是基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 定制的本地工作台，提供文件夹式工作区首页、简化的项目对话界面、可稍后添加的多模型 API Key 配置以及会话累计 Token 统计。右侧文件夹信息栏悬停展开，不展示本地路径。保留上游 MIT 许可证及源码来源说明。
+
+## 从源码运行本版本
+
+需要 Node.js 22.19+ 或 24+ 以及 pnpm 11.7.0。克隆本仓库，安装依赖、构建，再启动本地网页界面：
+
+```sh
+git clone https://github.com/zhang1845/zhang.workbench.git
+cd zhang.workbench
+pnpm install
+DSH_CLIENT_TITLE='zhang.workbench' pnpm build
+pnpm dsh web
+```
+
+API Key 在应用内配置，也可稍后添加。不要提交密钥、`.env`、`.dsh-home`、个人工作区或会话数据。V0.1 发布源码，已有的本地开发 App 不是便携安装包。下方软件包版本属于上游框架，与本定制版的 `V0.1` 发布标签分别管理。
+
+## 上游框架
 
 DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的开源 agent harness（智能体框架）。
 

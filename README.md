@@ -1,6 +1,24 @@
-# DeepSeek Harness
+# zhang.workbench
 
 English | [中文](README.zh.md)
+
+`zhang.workbench` V0.1 is a locally customized workbench based on [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). It provides a folder-based workspace home, a simplified project chat view, optional API Key onboarding for multiple model providers, and cumulative session token usage. Folder information appears on hover at the right edge and does not display the local path. The upstream MIT license and source attribution are retained.
+
+## Run this edition from source
+
+Requires Node.js 22.19+ or 24+ and pnpm 11.7.0. Clone this repository, install dependencies, build, and launch the local Web UI:
+
+```sh
+git clone https://github.com/zhang1845/zhang.workbench.git
+cd zhang.workbench
+pnpm install
+DSH_CLIENT_TITLE='zhang.workbench' pnpm build
+pnpm dsh web
+```
+
+API Keys are configured inside the app and can be added later. Never commit keys, `.env`, `.dsh-home`, personal workspaces, or session data. V0.1 publishes source code; the existing local development App is not a portable installer. The package versions below belong to the upstream framework, independently of this edition's `V0.1` release tag.
+
+## Upstream framework
 
 DeepSeek Harness (`dsh`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
 

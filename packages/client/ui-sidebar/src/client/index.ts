@@ -47,11 +47,14 @@ export function apply(ctx: ClientContext): void {
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-sidebar: dictionaries')
   const panels = createSnapshotStore<readonly SidebarPanelMetadata[]>([])
   const syncPanels = (): void => {
-    const next = ctx.slots.entriesOfSlot('sidebar.panellist').map(({ options }) => {
-      // The list registration requires an id; StoredEntry erases the slot kind.
-      const id = options.id as MainPanelId
-      return { id, order: options.order ?? 0, label: resolveSlotLabel(options.label) ?? id }
-    }).sort((a, b) => a.order - b.order)
+    // The local workbench hides these navigation entries without unloading their features.
+    const next = ctx.slots.entriesOfSlot('sidebar.panellist')
+      .filter(({ options }) => options.id !== 'plugins' && options.id !== 'schedules')
+      .map(({ options }) => {
+        // The list registration requires an id; StoredEntry erases the slot kind.
+        const id = options.id as MainPanelId
+        return { id, order: options.order ?? 0, label: resolveSlotLabel(options.label) ?? id }
+      }).sort((a, b) => a.order - b.order)
     const previous = panels.getSnapshot()
     if (previous.length === next.length && previous.every((panel, index) => {
       const candidate = next[index] as SidebarPanelMetadata

@@ -26,9 +26,16 @@ function declarations(selector: string): Map<string, string> | undefined {
 }
 
 describe('SidebarRoot.module.css', () => {
+  it('anchors compact settings beside the identity and removes card chrome in the rail', () => {
+    expect(declarations('.localIdentity')?.get('display')).toBe('flex')
+    expect(declarations('.localIdentityText')?.get('flex')).toBe('1')
+    expect(declarations('.settingsArea')?.get('width')).toBe('36px')
+    expect(declarations('.settingsArea')?.get('margin-left')).toBe('auto')
+    expect(declarations('.collapsed .localIdentity')?.get('border-top')).toBe('0')
+  })
   it('shares and cancels the wide shell trailing padding structurally', () => {
     const root = declarations('.root')
-    expect(root?.get('--dsh-sidebar-inline-padding')).toBe('12px')
+    expect(root?.get('--dsh-sidebar-inline-padding')).toBe('16px')
     expect(root?.get('padding')).toBe('6px var(--dsh-sidebar-inline-padding)')
     expect(declarations('.regionArea')?.get('margin-left')).toBe('-4px')
     expect(declarations('.regionArea')?.get('padding-left')).toBe('4px')
@@ -68,8 +75,17 @@ describe('SidebarRoot.module.css', () => {
     expect(declarations('.brandIdentity')?.get('height')).toBe('24px')
     expect(declarations('.brandName')?.get('height')).toBe('24px')
     expect(declarations('.brandName')?.get('line-height')).toBe('24px')
-    expect(declarations('.brandName')?.get('font-size')).toBe('18px')
-    expect(declarations('.fallbackBrandName')?.get('font-size')).toBe('17px')
+    expect(declarations('.brandName')?.get('font-size')).toBe('15px')
+    expect(declarations('.fallbackBrandName')?.get('font-size')).toBe('15px')
     expect(declarations('.fallbackBrandName')?.get('white-space')).toBe('nowrap')
+  })
+
+  it('uses a theme-aware solid surface and reserves the footer below navigation', () => {
+    expect(declarations('.root')?.get('background')).toBe('var(--dsw-alias-bg-base)')
+    expect(declarations(":global([data-platform='darwin']) .root")?.get('background')).toBe('var(--dsw-alias-bg-base)')
+    expect(declarations('.navigationArea')?.get('flex')).toBe('1')
+    expect(declarations('.footArea')?.get('flex')).toBe('none')
+    expect(declarations('.brandName')?.get('font-weight')).toBe('500')
+    expect(declarations('.root .buildVersion')?.get('display')).toBe('none')
   })
 })

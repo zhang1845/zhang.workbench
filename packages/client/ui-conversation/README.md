@@ -15,6 +15,8 @@ Desktop product events use the optional [product analytics service](../product-a
 
 ## Table of Contents
 
+The local AI.pm main Conversation shows a project header and a centered empty-session stack: welcome artwork and headings, the resident composer, then three compact task cards. Suggestions replace the draft without sending; the composer retains its model, attachment, and submission behavior and docks at the bottom after messages arrive. The preset selector is hidden without changing the session's configured preset. Started conversations keep their existing transcript; embedded Conversation views retain their original layout.
+
 - [Conversation assembly](#conversation-assembly)
 - [Shell and standard props](#shell-and-standard-props)
 - [Temporary composer entries](#temporary-composer-entries)

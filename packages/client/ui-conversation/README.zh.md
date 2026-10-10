@@ -15,6 +15,8 @@ kind: "package-reference"
 
 ## 目录
 
+本地 AI.pm 主对话页面显示项目标题，空会话中居中排列欢迎图形与标题、常驻输入框和下方三张紧凑任务卡片。点击建议只替换草稿、不自动发送；输入框保留模型、附件和发送行为，出现消息后固定在底部。模式选择入口隐藏，但不改变会话已配置的预设。已有对话保留原有消息视图；内嵌对话视图沿用原布局。
+
 - [Conversation 组装](#conversation-assembly)
 - [Shell 与标准 props](#shell-and-standard-props)
 - [临时 composer entry](#temporary-composer-entries)

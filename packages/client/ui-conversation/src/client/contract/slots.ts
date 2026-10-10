@@ -494,6 +494,14 @@ export type ConversationSessionSlotProps =
 export type ConversationHeaderProps =
   PropsRuntime<'conversation.header'>
   & PropsRenderSlots<'conversation.header.leading' | 'conversation.session.header'>
+  & PropsLocale<'conversation'>
+  & InjectFace<ConversationHeaderInjected>
+
+/** Project header actions supplied by the workspace navigation owner. */
+export interface ConversationHeaderInjected {
+  /** Start a blank conversation in the current project. */
+  startSession: () => void
+}
 
 /** Full props of the strict Session header. */
 export type ConversationSessionHeaderSlotProps =

@@ -11,6 +11,8 @@ Desktop product events use the optional [product analytics service](../product-a
 
 ## Summary
 
+The local AI.pm workbench asks whether to add an API key when no provider is usable. Add API key opens Settings → Models, where users choose a catalog provider or configure a custom model API; Add later enters the workbench without writing credentials. Any usable provider suppresses this prompt, including non-DeepSeek routes. Skipping lasts for the current page lifetime; a new launch asks again while unconfigured. The local desktop build uses this same choice instead of the account introduction.
+
 `dsh-client-ui-settings-models` is the Models settings page of the dsh web client: users configure API keys (stored write-only under the profile's credential reference), edit each provider's model list, and hand-declare custom pi-ai routes, with provider rows and one editor card at a time. The page joins the provider directory, the settings document, and the credential descriptions into one shared snapshot, so a row's state stays consistent across all three. It also walks first-run users through two ordered dialogs — a versioned preview notice and the conditional official-DeepSeek credential step.
 
 ## Table of Contents

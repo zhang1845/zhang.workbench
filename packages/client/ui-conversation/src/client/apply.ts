@@ -109,6 +109,7 @@ function hostPathBridge(): HostPathBridge | undefined {
 }
 
 interface WorkspaceNavigation {
+  startSession(): void
   openSession(sessionId: SessionId): void
   openWorkspace(
     workspaceId: Parameters<ConversationInjected['selectWorkspace']>[0],
@@ -391,6 +392,8 @@ export function apply(ctx: Context, config: Config = Config({})): void {
 
   const registerHeader = () => slots.register({
     name: 'conversation.header',
+    locale: NS,
+    inject: () => ({ startSession: () => { workspaceNavigation.startSession() } }),
     children: {
       'conversation.header.leading': { kind: 'single', scope: 'root' },
       'conversation.session.header': { kind: 'single', scope: 'session' },

@@ -45,6 +45,8 @@ import { createWorkspaceShortcutControls, installWorkspaceShortcuts } from './sh
 import { UiWorkspaceService } from './navigation.ts'
 import { createWorkspaceViewStore } from './stores.ts'
 import { WorkspaceBrowser } from './rows/WorkspaceBrowser.tsx'
+import { Workbench } from './Workbench.tsx'
+import type { MainPanelId } from '@deepseek-ai/dsh-client-ui-layout/client'
 import { ArchiveSessionMenuItem, ArchiveSessionRowButton, SessionArchiveConfirmDialog } from './session-actions/ArchiveSession.tsx'
 import { derive } from './session-actions/derived.ts'
 import { ForkSessionMenuItem } from './session-actions/ForkSession.tsx'
@@ -229,6 +231,8 @@ export function apply(ctx: Context): void {
     showArchived: () => { viewInstance.actions.setArchivedFilter('show') },
   })
   const browserInjected = (): WorkspaceBrowserInjected => ({
+    showWorkbench: () => { ctx.layout.selectPanel('workbench' as MainPanelId) },
+    enterWorkspace: id => uiWorkspace.openWorkspace(id),
     // Explicit group actions keep their target; unscoped New Session inherits
     // the current Session Workspace before the recent-Workspace fallback.
     startSession: (workspaceId) => { uiWorkspace.startSession(workspaceId) },
@@ -254,6 +258,21 @@ export function apply(ctx: Context): void {
   const pickerInjected = (): WorkspacePickerInjected => ({
     createWorkspace: input => workspaces.create(input),
     hooks: { directoryFlow: pickerFlowSource },
+  })
+  ctx.slots.inject('main', function* () {
+    yield ctx.slots.register({
+      name: 'main', key: 'workbench', locale: NS,
+      inject: () => ({
+        enterWorkspace: (id: Parameters<typeof uiWorkspace.openWorkspace>[0]) => uiWorkspace.openWorkspace(id),
+        addWorkspace: shortcutControls.add,
+        refreshUsage: (ids: readonly SessionId[]) => {
+          for (const id of new Set(ids)) {
+            void sessions.refreshProjections(id).catch((error: unknown) => { console.warn('workspace usage read failed:', error) })
+          }
+        },
+      }),
+    }, Workbench)
+    ctx.layout.selectPanel('workbench' as MainPanelId)
   })
   // Each registration declares its owned children in the same call; slot
   // injection follows both the owner and declaration HMR lifetimes.

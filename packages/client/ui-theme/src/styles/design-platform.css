@@ -2,6 +2,9 @@
    font-weight: 500 in this UI — non-variable webfonts snap intermediate
    weights unpredictably across platforms. */
 body {
+  --dsw-alias-workbench-folder-blue: var(--dsw-static-blue-450);
+  --dsw-alias-workbench-folder-light: var(--dsw-static-blue-300);
+  --dsw-alias-workbench-folder-ink: var(--dsw-static-neutral-bluish-1000);
   --dsw-static-amber-100: rgb(254, 245, 231);
   --dsw-static-amber-400: rgb(247, 173, 49);
   --dsw-static-amber-500: rgb(245, 158, 11);

@@ -6241,6 +6241,9 @@ importers:
 
   packages/client/ui-workspace:
     devDependencies:
+      '@deepseek-ai/dsh-token-meter':
+        specifier: workspace:*
+        version: link:../../llm/token-meter
       '@deepseek-ai/cordis':
         specifier: workspace:~
         version: link:../../../vendor/cordis

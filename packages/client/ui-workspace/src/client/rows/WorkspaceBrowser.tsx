@@ -41,6 +41,7 @@ import { AnimatedRows } from './AnimatedRows.tsx'
 import { FLAT_SESSION_ORDER_KEY, type SessionGroupBy } from '../stores.ts'
 import { WorkspacePickFlow } from '../WorkspacePicker.tsx'
 import css from './WorkspaceBrowser.module.css'
+import workbenchCss from '../Workbench.module.css'
 
 /**
  * Column slide length (--ds-transition-duration-slow): rail-search focus waits it out —
@@ -833,7 +834,27 @@ function SearchResults({
  * @param props - composed slot props (shell owner share + store + injected actions).
  * @returns the region element tree.
  */
-export function WorkspaceBrowser({
+export function WorkspaceBrowser(props: WorkspaceBrowserProps) {
+  const onHome = props.usePanelInfo(info => info.activePanelId === 'workbench')
+  const inConversation = props.usePanelInfo(info => info.activePanelId === null)
+  const folders = props.useWorkspaces(state => state.items)
+  const sessions = props.useSessions(state => state.byId)
+  const activeFolder = inConversation
+    ? folders.find(folder => folder.sessionIds.some(id => sessions[id]?.retainedBy.mainView))?.workspaceId : undefined
+  const [projectsExpanded, setProjectsExpanded] = useState(true)
+  return <>
+    <nav className={workbenchCss.nav} aria-label={props.t('workbench.home')} data-workbench-nav data-home={onHome} data-wide={props.wide}>
+      <Tooltip label={props.t('workbench.navHome')} disabled={props.wide} side="right"><button aria-label={props.t('workbench.navHome')} onClick={props.showWorkbench} aria-current={onHome ? 'page' : undefined}><IconWorkspaceTreeOutlineRegular size={17} />{props.wide && <span>{props.t('workbench.navHome')}</span>}</button></Tooltip>
+      <Tooltip label={props.t('workbench.projects')} disabled={props.wide} side="right"><button className={workbenchCss.projectsButton} aria-label={props.t('workbench.projects')} aria-expanded={projectsExpanded} onClick={() => { if (!props.wide) props.expandSidebar(); setProjectsExpanded(!props.wide || !projectsExpanded) }}><IconFolderCloseRegular size={17} />{props.wide && <span>{props.t('workbench.projects')}</span>}</button></Tooltip>
+      {props.wide && projectsExpanded && onHome && <div className={workbenchCss.projectTree} aria-label={props.t('workbench.projectTree')}>
+        {folders.map(folder => <button className={workbenchCss.navFolder} aria-current={activeFolder === folder.workspaceId ? 'page' : undefined} key={folder.workspaceId} onClick={() => { void props.enterWorkspace(folder.workspaceId).catch(() => { /* The navigation service reports the failure through its shared notice. */ }) }}><span>{workspaceDisplayTitle(folder.title, props.t('workspace.defaultName'))}</span></button>)}
+      </div>}
+    </nav>
+    <div style={onHome || (props.wide && !projectsExpanded) ? { display: 'none' } : { display: 'contents' }}><WorkspaceSessionBrowser {...props} /></div>
+  </>
+}
+
+function WorkspaceSessionBrowser({
   wide,
   usePanelInfo,
   expandSidebar,

@@ -107,6 +107,8 @@ function mount(overrides: Partial<WorkspaceBrowserProps> = {}) {
   const controls = createWorkspaceShortcutControls()
   const store = createWorkspaceViewStore().create()
   const props: WorkspaceBrowserProps = {
+    showWorkbench: vi.fn(),
+    enterWorkspace: vi.fn(async () => {}),
     useShortcuts: select => select([]),
     useWorkspaceShortcuts: bindSnapshotSelector(controls.state),
     requestSearch: controls.search,

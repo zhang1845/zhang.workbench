@@ -7,6 +7,7 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
 >
   <div
     class="root collapsed railIn quietBars"
+    data-workbench-home="false"
     style=""
   >
     <div
@@ -60,12 +61,16 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
       </span>
     </button>
     <div
-      class="regionArea"
+      class="navigationArea"
     >
       <div
-        data-slot="sidebar.workspaces"
-        style="display: contents;"
-      />
+        class="regionArea"
+      >
+        <div
+          data-slot="sidebar.workspaces"
+          style="display: contents;"
+        />
+      </div>
     </div>
     <div
       class="footArea"
@@ -79,12 +84,16 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
         />
       </div>
       <div
-        class="settingsArea"
+        class="localIdentity"
       >
         <div
-          data-slot="sidebar.settings"
-          style="display: contents;"
-        />
+          class="settingsArea"
+        >
+          <div
+            data-slot="sidebar.settings"
+            style="display: contents;"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -98,6 +107,7 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
 >
   <div
     class="root quietBars"
+    data-workbench-home="false"
     style="width: 300px;"
   >
     <div
@@ -203,12 +213,16 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
       </span>
     </button>
     <div
-      class="regionArea"
+      class="navigationArea"
     >
       <div
-        data-slot="sidebar.workspaces"
-        style="display: contents;"
-      />
+        class="regionArea"
+      >
+        <div
+          data-slot="sidebar.workspaces"
+          style="display: contents;"
+        />
+      </div>
     </div>
     <div
       class="footArea"
@@ -222,12 +236,39 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
         />
       </div>
       <div
-        class="settingsArea"
+        class="localIdentity"
       >
+        <span
+          aria-hidden="true"
+          class="localAvatar wide"
+        >
+          <svg
+            aria-hidden="true"
+            data-content="965fe321"
+            fill="none"
+            height="11.7720207253886"
+            viewBox="0 0 23.16 17.04"
+            width="16"
+          />
+        </span>
+        <span
+          class="localIdentityText wide"
+        >
+          <span>
+            Personal workspace
+          </span>
+          <small>
+            Local workbench
+          </small>
+        </span>
         <div
-          data-slot="sidebar.settings"
-          style="display: contents;"
-        />
+          class="settingsArea"
+        >
+          <div
+            data-slot="sidebar.settings"
+            style="display: contents;"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -241,6 +282,7 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
 >
   <div
     class="root collapsed railIn quietBars"
+    data-workbench-home="false"
     style=""
   >
     <div
@@ -312,12 +354,16 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
       </span>
     </button>
     <div
-      class="regionArea"
+      class="navigationArea"
     >
       <div
-        data-slot="sidebar.workspaces"
-        style="display: contents;"
-      />
+        class="regionArea"
+      >
+        <div
+          data-slot="sidebar.workspaces"
+          style="display: contents;"
+        />
+      </div>
     </div>
     <div
       class="footArea"
@@ -331,12 +377,16 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
         />
       </div>
       <div
-        class="settingsArea"
+        class="localIdentity"
       >
         <div
-          data-slot="sidebar.settings"
-          style="display: contents;"
-        />
+          class="settingsArea"
+        >
+          <div
+            data-slot="sidebar.settings"
+            style="display: contents;"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -350,6 +400,7 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
 >
   <div
     class="root quietBars"
+    data-workbench-home="false"
     style="width: 300px;"
   >
     <div
@@ -455,12 +506,16 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
       </span>
     </button>
     <div
-      class="regionArea"
+      class="navigationArea"
     >
       <div
-        data-slot="sidebar.workspaces"
-        style="display: contents;"
-      />
+        class="regionArea"
+      >
+        <div
+          data-slot="sidebar.workspaces"
+          style="display: contents;"
+        />
+      </div>
     </div>
     <div
       class="footArea"
@@ -474,12 +529,39 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
         />
       </div>
       <div
-        class="settingsArea"
+        class="localIdentity"
       >
+        <span
+          aria-hidden="true"
+          class="localAvatar wide"
+        >
+          <svg
+            aria-hidden="true"
+            data-content="965fe321"
+            fill="none"
+            height="11.7720207253886"
+            viewBox="0 0 23.16 17.04"
+            width="16"
+          />
+        </span>
+        <span
+          class="localIdentityText wide"
+        >
+          <span>
+            Personal workspace
+          </span>
+          <small>
+            Local workbench
+          </small>
+        </span>
         <div
-          data-slot="sidebar.settings"
-          style="display: contents;"
-        />
+          class="settingsArea"
+        >
+          <div
+            data-slot="sidebar.settings"
+            style="display: contents;"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -493,6 +575,7 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
 >
   <div
     class="root quietBars"
+    data-workbench-home="false"
     style="width: 300px;"
   >
     <div
@@ -598,12 +681,16 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
       </span>
     </button>
     <div
-      class="regionArea"
+      class="navigationArea"
     >
       <div
-        data-slot="sidebar.workspaces"
-        style="display: contents;"
-      />
+        class="regionArea"
+      >
+        <div
+          data-slot="sidebar.workspaces"
+          style="display: contents;"
+        />
+      </div>
     </div>
     <div
       class="footArea"
@@ -617,12 +704,39 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
         />
       </div>
       <div
-        class="settingsArea"
+        class="localIdentity"
       >
+        <span
+          aria-hidden="true"
+          class="localAvatar wide"
+        >
+          <svg
+            aria-hidden="true"
+            data-content="965fe321"
+            fill="none"
+            height="11.7720207253886"
+            viewBox="0 0 23.16 17.04"
+            width="16"
+          />
+        </span>
+        <span
+          class="localIdentityText wide"
+        >
+          <span>
+            个人工作空间
+          </span>
+          <small>
+            本地工作台
+          </small>
+        </span>
         <div
-          data-slot="sidebar.settings"
-          style="display: contents;"
-        />
+          class="settingsArea"
+        >
+          <div
+            data-slot="sidebar.settings"
+            style="display: contents;"
+          />
+        </div>
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ import type { WorkspaceId } from '@deepseek-ai/dsh-workspace/types'
 import { workspaceDisplayTitle } from '@deepseek-ai/dsh-api-workspace-controller/default-workspace'
 import type { ConversationContentProps, ConversationViewsProps, InputZone } from '../contract/slots.ts'
 import { HeroShell, WorkspaceChip, workspaceLabel } from './EmptyHero.tsx'
+import { ProjectShortcuts, ProjectWelcome } from './ProjectWelcome.tsx'
 import css from './ConversationRoot.module.css'
 
 function ConversationSessionView({ renderSlot }: ConversationViewsProps) {
@@ -26,6 +27,7 @@ export function ConversationContent(props: ConversationContentProps) {
     selectWorkspace, t, useFactorySlot,
   } = props
   const session = useSession(snapshot => snapshot)
+  const localProject = process.env.DSH_CLIENT_TITLE === 'AI.pm工作台' && props.variant === 'main'
   const Views = useFactorySlot('views', ConversationSessionView)
   const WidthControls = useFactorySlot('widthControls', NoConversationWidthControls)
   const [body, setBody] = useState<HTMLDivElement | null>(null)
@@ -129,7 +131,7 @@ export function ConversationContent(props: ConversationContentProps) {
         },
         onClose: () => { setPickerOpen(false) },
       })}
-      {renderSlot('conversation.hero.agentPreset', {})}
+      {!localProject && renderSlot('conversation.hero.agentPreset', {})}
     </div>
   )
 
@@ -162,7 +164,7 @@ export function ConversationContent(props: ConversationContentProps) {
 
   const composerBar = (
     <div className={clsx(css.composerStack, hero && css.composerHero)}>
-      {hero && <HeroShell t={t} renderSlot={renderSlot} />}
+      {hero && !localProject && <HeroShell t={t} renderSlot={renderSlot} />}
       {hero && heroWorkspaceRow}
       {zone !== undefined && renderSlot('conversation.input.dock', zone)}
       {inputBar}
@@ -188,15 +190,20 @@ export function ConversationContent(props: ConversationContentProps) {
   return (
     <div
       ref={setBody}
-      className={clsx(css.body, props.variant === 'embedded' && css.embeddedBody)}
+      className={clsx(css.body, props.variant === 'embedded' && css.embeddedBody, localProject && css.projectBody)}
       data-conversation-content=""
+      data-project-conversation={localProject ? '' : undefined}
       data-conversation-session={sessionId}
       data-conversation-region="chat"
       data-content-phase={phase}
     >
       <div className={css.scrollBody} data-conversation-scroll="">
         {sessionId === undefined ? null : <Views />}
+        {localProject && hero && <ProjectWelcome t={t} />}
         {composerSeat}
+        {localProject && hero && <ProjectShortcuts
+          t={t} disabled={inert || blocked} onChoose={(text) => { props.inputActions?.setDraft(text) }}
+        />}
       </div>
       <WidthControls container={body} phase={phase} />
     </div>

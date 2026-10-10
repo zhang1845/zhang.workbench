@@ -8,6 +8,7 @@
     "src"
   ],
   "references": [
+    { "path": "../../llm/token-meter" },
     {
       "path": "../../api/session-controller/tsconfig.client.json"
     },

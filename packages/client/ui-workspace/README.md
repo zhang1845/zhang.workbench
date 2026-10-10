@@ -11,6 +11,12 @@ Desktop product events use the optional [product analytics service](../product-a
 
 ## Summary
 
+The local AI.pm edition opens on a folder workbench with a centered blue welcome orb, search, recent ordering, and a centered folder grid. Live workspace details and token usage share an auto-hidden rounded information card. Hover the right edge to reveal it and leave to retract it, without shifting the folders. The edge button also supports click and keyboard focus; Escape, focus leaving, or clicking outside dismisses the card. Small windows scroll the card within the viewport. Opening a folder reveals its conversation; the sidebar Home action returns to the workbench without deleting or interrupting the session. The directory picker remains composed through the sidebar, including while the session list is hidden on Home.
+
+Hovering or keyboard-focusing a folder lifts the card and stagger-bounces its two paper sheets before settling slightly open. Leaving restores the resting position. Disabled cards and reduced-motion preferences suppress this decorative animation.
+
+Folder info shows cumulative provider-reported tokens for the selected workspace's sessions. Input includes uncached input, cache reads and cache writes; total adds output, without counting reasoning twice. Projection baselines load without opening conversations and use the shared session cache. Unknown sessions are explicitly marked as partial, failed reads offer retry, and an empty workspace shows zero. This is session usage, not an account balance or a context-window limit; forked histories retain their inherited per-session usage.
+
 This package lets users browse grouped or flat Session lists, choose a Workspace for a new Session, and manage Workspaces and Sessions through add, rename, reorder, search, fork, archive, and Workspace deletion; the Session row menu and its hover buttons are slot lists that client plugins extend. Pending interactions appear as warning dots, and subagent-origin Sessions remain hidden. An idle, unarchived Session row with active scheduled tasks shows a clock mark, and its hover card lists those tasks. Canonically distinct folder paths remain separate Workspaces. Adding a Workspace requires a composed directory picker; without one, adding is unavailable.
 
 ## Table of Contents

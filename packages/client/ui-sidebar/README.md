@@ -11,6 +11,12 @@ Desktop product events use the optional [product analytics service](../product-a
 
 ## Summary
 
+In the local AI.pm project Conversation, Home and Projects form a compact navigation rail beside the existing session browser; the home landing page retains its wider navigation rows.
+
+The local AI.pm edition hides the Plugins and Schedules sidebar entries in both expanded and collapsed navigation. Their panel registrations, services, and stored data remain available for future restoration.
+
+The local AI.pm workbench uses a solid, theme-aware sidebar with a compact brand, Home and a collapsible Projects tree above the existing plugin navigation, and a bottom-pinned Settings area and local identity card. The build version remains embedded in the artifacts but is not displayed beneath the wordmark. Folder selection opens the existing conversation; returning Home hides the conversation input.
+
 The dsh web client sidebar lets users recognize the active build, start a new session, collapse navigation to a 56px rail, browse Workspaces and Sessions, and open Settings. It preserves a bottom-pinned Settings entry and hides idle scrollbars without moving browser rows. New Session uses an explicitly selected Workspace, then the current Session's Workspace, then the most recently active Workspace; if none exists, it opens a blank New Session page. Deployments can replace the brand mark or name while retaining the navigation controls and rail geometry.
 
 ## Table of Contents
@@ -67,7 +73,7 @@ The shell is pure composition: `SidebarRootComponentProps` composes the layout o
 
 ### Slot discipline
 
-Declaration-aware `slots.inject()` lets a replacing package activate before or after the sidebar. The foot is the `sidebar.settings` seat: the sidebar renders only the bottom-pinned layout slot and shares its column state (`wide`). The `/client` exports are the plugin body (`apply`/`inject`) plus the contract types only; SidebarRoot, the row components, and the tree derivation remain package-internal behind the slot registration.
+Declaration-aware `slots.inject()` lets a replacing package activate before or after the sidebar. The bottom-pinned `sidebar.settings` seat uses compact icon presentation (`wide: false`) beside the local identity on the right, rather than a separate More row. The occupant stays mounted through collapse, preserving its menu and dialog state; in the rail only the compact trigger remains. The `/client` exports are the plugin body (`apply`/`inject`) plus the contract types only; SidebarRoot, the row components, and the tree derivation remain package-internal behind the slot registration.
 
 </details>
 

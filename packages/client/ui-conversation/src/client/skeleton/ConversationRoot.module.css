@@ -543,3 +543,21 @@ button.crumb:hover {
 .embeddedBody[data-content-phase='settling'] .composerSeat {
   visibility: hidden;
 }
+
+/* The local blank project centers its welcome, resident editor, and shortcuts. */
+.projectBody { background: color-mix(in srgb, var(--dsw-alias-label-primary) 2%, var(--dsw-alias-bg-base)); margin: 0 16px 14px; border-radius: var(--dsw-radius-panel); container-type: inline-size; }
+.projectBody[data-content-phase='hero'] .scrollBody { justify-content: safe center; gap: 28px; padding: 40px 0; }
+.projectBody[data-content-phase='hero'] .composerSeat { position: relative; bottom: auto; z-index: 1; margin-top: 0; padding-bottom: 0; width: 100%; }
+.projectBody .composerHero { padding-bottom: 0; }
+.projectBody .composerStack { width: min(calc(var(--dsh-composer-card-max-width) + 32px), 100%); margin: 0 auto; }
+.projectBody[data-content-phase='hero'] .composerStack { width: min(680px, 100%); }
+@media (max-height: 700px) { .projectBody[data-content-phase='hero'] .scrollBody { gap: 20px; padding: 24px 0; } }
+.projectHeader { padding: 18px 24px 12px; grid-template-columns: auto minmax(0, 1fr); }
+.projectTitle { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; }
+.projectTitle > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 500; }
+.projectTitle button { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: none; border-radius: 999px; background: var(--dsw-alias-label-primary); color: var(--dsw-alias-bg-base); cursor: pointer; font: inherit; font-size: 12px; -webkit-app-region: no-drag; }
+.projectHeader > .titleRow { grid-column: 1 / -1; }
+.projectHeader.headerBlank .titleRow { display: contents; }
+.projectHeader.headerBlank .headerCorner { position: absolute; right: 20px; top: 18px; }
+.projectTitle { padding-right: 36px; }
+:global([data-platform='darwin']) .projectHeader { padding-top: calc(var(--dsh-frame-top-clearance) + 12px); }

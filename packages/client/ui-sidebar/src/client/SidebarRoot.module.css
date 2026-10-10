@@ -7,25 +7,34 @@
    mid-slide. */
 
 .root {
-  --dsh-sidebar-inline-padding: 12px;
+  --dsh-sidebar-inline-padding: 16px;
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 6px var(--dsh-sidebar-inline-padding);
   box-sizing: border-box;
-  background: var(--dsw-specific-sidebar-fill);
+  background: var(--dsw-alias-bg-base);
   color: var(--dsw-alias-label-primary);
-  font-size: 14px;
+  font-size: 13px;
   /* The sidebar is elevated above the conversation surface, so a revealed
      scrollbar uses the l2 pair. .quietBars hides it without changing layout. */
   --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
   --dsh-scrollbar-thumb-hover: var(--dsw-alias-scrollbar-hover-l2);
 }
 
-/* macOS desktop: the AppFrame column owns the translucent sidebar tint; an
-   opaque fill here would sit on top of it and block the window vibrancy. */
+/* Local project: a compact navigation rail beside the live session list. */
+.root[data-local-project='true']:not(.collapsed) { position: relative; padding-left: 58px; padding-right: 12px; }
+.root[data-local-project='true']:not(.collapsed)::before { content: ''; position: absolute; left: 44px; top: 54px; bottom: 12px; width: 1px; background: var(--dsw-alias-border-l3); }
+.root[data-local-project='true']:not(.collapsed) .brandMark { position: absolute; left: 10px; top: 72px; background: none; }
+.root[data-local-project='true']:not(.collapsed) .brandName { font-size: 13px; }
+.root[data-local-project='true']:not(.collapsed) .newSession { background: var(--dsw-alias-label-primary); color: var(--dsw-alias-bg-base); border-radius: 999px; }
+.root[data-local-project='true']:not(.collapsed) :global([data-workbench-nav]) { position: absolute; left: 6px; top: 122px; width: 32px; margin: 0; padding: 0; }
+.root[data-local-project='true']:not(.collapsed) :global([data-workbench-nav]) button { width: 32px; padding: 8px; justify-content: center; }
+.root[data-local-project='true']:not(.collapsed) :global([data-workbench-nav]) button > span { display: none; }
+
+/* The local workbench uses the same solid surface on every platform. */
 :global([data-platform='darwin']) .root {
-  background: transparent;
+  background: var(--dsw-alias-bg-base);
 }
 
 /* Rail geometry (figma rail spec): 36x36 control boxes centered in the 56px
@@ -223,9 +232,9 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  height: 60px;
+  height: 64px;
   padding: 8px 0 8px 4px;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -268,7 +277,7 @@
 .brandIdentity {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   height: 24px;
   min-width: 0;
 }
@@ -278,7 +287,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: none;
+  color: var(--dsw-alias-label-primary-inverted);
 }
+.brandMark svg { width: 26px; height: 26px; }
 
 .brandName {
   display: inline-flex;
@@ -286,14 +301,14 @@
   gap: 6px;
   min-width: 0;
   height: 24px;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
 }
 
 .fallbackBrandName {
-  font-size: 17px;
+  font-size: 15px;
   letter-spacing: 0px;
   white-space: nowrap;
 }
@@ -310,8 +325,8 @@
 }
 
 .localBuildTitle {
-  font-size: 12px;
-  line-height: 13px;
+  font-size: 15px;
+  line-height: 22px;
   letter-spacing: 0;
 }
 
@@ -493,13 +508,13 @@
 .panelRow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 2px;
-  min-height: 36px;
-  padding: 7px 8px;
+  gap: 10px;
+  margin: 0;
+  min-height: 34px;
+  padding: 6px 10px;
   box-sizing: border-box;
   border: none;
-  border-radius: var(--dsw-radius-md);
+  border-radius: 8px;
   background: transparent;
   color: var(--dsw-alias-label-primary);
   font: inherit;
@@ -564,6 +579,16 @@
   overflow: hidden;
 }
 
+.navigationArea { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.root[data-workbench-home='true'] .regionArea { flex: 0 1 auto; max-height: 60%; overflow: auto; }
+.root[data-workbench-home='true'] .panelList { margin-top: 2px; }
+.root .buildVersion { display: none; }
+.localIdentity { display: flex; align-items: center; gap: 10px; padding: 18px 6px 14px; margin-top: 16px; border-top: 1px solid var(--dsw-alias-border-l2); }
+.localAvatar { display: flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--dsw-alias-bg-module-platform); color: var(--dsw-alias-label-primary); }
+.localIdentityText { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; font-size: 12px; }
+.localIdentityText span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.localIdentityText small { font-size: 11px; color: var(--dsw-alias-label-secondary); }
+
 .collapsed .regionArea {
   margin-left: 0;
   margin-right: 0;
@@ -578,11 +603,23 @@
   flex-direction: column;
 }
 
-.settingsArea,
 .footerActions {
   flex: none;
   min-width: 0;
   width: 100%;
+}
+
+.settingsArea {
+  flex: none;
+  width: 36px;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.collapsed .localIdentity {
+  padding: 0;
+  margin-top: 0;
+  border-top: 0;
 }
 
 .footerActions {

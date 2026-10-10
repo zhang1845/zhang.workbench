@@ -121,6 +121,20 @@ async function mountPanels(runtime: SlotTestRuntime, locale: LocaleRuntime, beta
 }
 
 describe('sidebar global panels', () => {
+  it.each([false, true])('hides Plugins and Schedules in local navigation without unloading their panels (collapsed=%s)', async (collapsed) => {
+    const { runtime, layout, view } = await bench(collapsed)
+    await mountPanel(runtime, { id: 'plugins' as MainPanelId, heading: 'Plugin content', label: 'Plugins' })
+    await mountPanel(runtime, { id: 'schedules' as MainPanelId, heading: 'Schedule content', label: 'Schedules' })
+    expect(runtime.slots.entries('sidebar.panellist')).toHaveLength(2)
+    expect(view.queryByRole('button', { name: 'Plugins' })).toBeNull()
+    expect(view.queryByRole('button', { name: 'Schedules' })).toBeNull()
+    expect(view.queryByRole('navigation', { name: 'Global panels' })).toBeNull()
+    act(() => { layout.selectPanel('plugins' as MainPanelId) })
+    expect(await view.findByRole('heading', { name: 'Plugin content' })).toBeTruthy()
+    act(() => { layout.selectPanel('schedules' as MainPanelId) })
+    expect(await view.findByRole('heading', { name: 'Schedule content' })).toBeTruthy()
+  })
+
   it('adds late registrations, removes each plugin contribution, and leaves no empty panel-list DOM', async () => {
     const { runtime, locale, view } = await bench()
     expect(runtime.slots.entries('sidebar.panellist')).toEqual([])

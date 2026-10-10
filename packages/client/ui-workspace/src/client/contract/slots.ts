@@ -213,6 +213,8 @@ export type DirectoryPickingHooks = PropsHooks<DirectoryPickingInjected['hooks']
  * browsing region drives.
  */
 export type WorkspaceBrowserInjected = {
+  showWorkbench: () => void
+  enterWorkspace: (id: WorkspaceId) => Promise<void>
   hooks: DirectoryPickingInjected['hooks'] & {
     /**
      * Fixed Host facts, reached through a hook rather than injected as values:

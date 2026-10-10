@@ -204,7 +204,7 @@ function mount(
       return opts?.fallback ?? null
     }
     if (key === 'conversation.header') {
-      return <ConversationHeader {...runtimeProps} renderSlot={renderSlot as never} />
+      return <ConversationHeader {...runtimeProps} t={t} startSession={vi.fn()} renderSlot={renderSlot as never} />
     }
     if (key === 'conversation.session.header') {
       return (
@@ -684,6 +684,19 @@ describe('ConversationRoot resident composer', () => {
     // The agent-preset chip sits in the same row, for the same reason: both
     // choices are only open before the first message.
     expect(b.slotCalls).toContain('conversation.hero.agentPreset')
+  })
+
+  it('hides the preset selector in the local AI.pm project while retaining workspace and input', () => {
+    vi.stubEnv('DSH_CLIENT_TITLE', 'AI.pm工作台')
+    try {
+      const b = mount(sessionSnapshotOf({ blank: true }))
+      expect(b.slotCalls).not.toContain('conversation.hero.agentPreset')
+      expect(b.slotCalls).toContain('conversation.hero.workspace')
+      expect(b.view.getByRole('button', { name: '选择工作区' })).toBeTruthy()
+      expect(b.view.getByRole('textbox')).toBeTruthy()
+    } finally {
+      vi.unstubAllEnvs()
+    }
   })
 
   it('prompt failure renders the promptError strip (ordinary failure, no transaction UI)', () => {

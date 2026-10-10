@@ -68,8 +68,9 @@ export interface WelcomeAuthentication {
 /**
  * Decide whether a startup or sign-out requires the welcome entry.
  * @param authentication - current account and independently stored API-key facts.
+ * @param enabled - whether this desktop deployment uses the native welcome window.
  * @returns true only when neither authentication route is configured.
  */
-export function needsWelcome(authentication: WelcomeAuthentication): boolean {
-  return !authentication.loggedIn && !authentication.hasApiKey
+export function needsWelcome(authentication: WelcomeAuthentication, enabled = true): boolean {
+  return enabled && !authentication.loggedIn && !authentication.hasApiKey
 }

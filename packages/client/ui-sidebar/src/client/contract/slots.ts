@@ -96,11 +96,11 @@ export interface SidebarSectionOwnerProps {
 }
 
 /**
- * Owner share of the sidebar settings seat: the column display state the
+ * Owner share of the sidebar settings seat: the trigger display state the
  * occupant's trigger row must render against (wide row vs rail icon).
  */
 export interface SidebarSettingsOwnerProps {
-  /** Whether the sidebar renders wide content (false = 56px rail). */
+  /** Whether the trigger renders a wide label (false = compact icon). */
   wide: boolean
 }
 

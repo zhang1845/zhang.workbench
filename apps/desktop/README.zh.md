@@ -42,11 +42,11 @@ Windows 在整个运行期间常驻托盘图标。悬停提示为产品名，单
 
 以下情况跳过确认：安装更新的重启已确认过任务中断、致命错误恢复对话框中的退出或重启、开发版"重启应用与 Host"命令，以及操作系统关机、重启或注销：Windows 在确定性的会话结束消息上设置该状态；macOS 在关机通知上设置，而其他应用仍可能取消这次关机，因此主窗口下一次获得焦点或显示时会清除它。安装器接管退出时会取消尚未结束的普通退出决策；晚到的查询结果和弹框答复不会再次打开确认框或重复清理。窗口隐藏期间完成的用户主动发起的更新下载，把"安装并重启"确认推迟到窗口再次显示时；强制更新流程沿用其任务栏和 Dock 提醒。Windows 安装程序和卸载程序在应用仍在运行时提示用户先在系统托盘中退出。Desktop 默认未开启定时任务，定时任务的说明只在该功能开启后出现；提醒只在已加载的会话中触发，未加载的会话既不计入，也要等到打开后才会继续。
 
-托盘渲染器以底板中心为基准将鲸鱼放大 20%，保留背景和宽高比；应用和安装器图标保持原有比例。
+托盘渲染器以底板中心为基准将白色品牌字形放大 20%，保留渐变边框；应用和安装器图标保持原有比例。
 
 ## 关键技术决策
 
-设计师原稿位于 `resources/icon.png` 和 `resources/icon.svg`；平台适配保留鲸鱼与渐变，分别位于 `resources/icon-windows.*` 和 `resources/icon-macos.*`。将各平台 SVG 导出为透明的 1024×1024 PNG。electron-builder 为 Windows 应用、安装程序和卸载程序生成多尺寸 ICO（[Windows 图标要求](https://learn.microsoft.com/en-us/windows/apps/design/iconography/app-icon-construction)）。安装页面在两种主题下使用匹配的图案；卸载程序的欢迎和完成页共用 `installer/assets/uninstaller-sidebar.png`，准备阶段将其转换为 164×314 BMP。
+在本目录运行 `pnpm exec tsx scripts/render-ai-pm-brand.ts`，即可从 `packages/client/ui-primitives/src/ai-pm-artwork.ts` 导出 AI.pm 图稿，包括平台图标、网站图标、欢迎页图稿、安装标志和 macOS 图标集。将各平台 SVG 导出为透明的 1024×1024 PNG。electron-builder 为 Windows 应用、安装程序和卸载程序生成多尺寸 ICO（[Windows 图标要求](https://learn.microsoft.com/en-us/windows/apps/design/iconography/app-icon-construction)）。安装页面在两种主题下使用匹配的图案；卸载程序的欢迎和完成页共用 `installer/assets/uninstaller-sidebar.png`，准备阶段将其转换为 164×314 BMP。
 
 快捷键覆盖保存在 `app.getPath('userData')/keybindings.json`，与 `DSH_HOME` 分离。主进程校验并串行保存修改后才发布已接受键位。读取失败保留上次接受的键位并阻止编辑，包括全部恢复；不可读和未来版本的文件保持不变。开发时可通过 `DSH_DESKTOP_USER_DATA_DIR` 隔离这些偏好，启动器会输出解析后的路径。格式和冲突语义见[快捷键服务](../../packages/client/shortcuts/README.zh.md)。
 
@@ -473,6 +473,8 @@ node apps/desktop/node_modules/pnpm/bin/pnpm.mjs --dir apps/desktop run test:upd
 - 依赖的生命周期脚本遵循 pnpm 的构建权限；Desktop 不提供单独的审批对话框。
 - 桌面壳与 CLI dsh 共享 `$DSH_HOME` 下的会话、设置、凭据、工作区和存储，但可执行包、插件激活和锁文件彼此隔离。
 - 在 Electron win32-arm64 宿主上，未打包启动现在可以成功，但载荷仍为 x64：`packages/skill/tool-workspace-dependencies/src/index.ts` 的架构校验会把载荷记录的架构与宿主 `process.arch` 比较，因此 `load_workspace_dependencies` 工具仍可能拒绝 primary runtime。
+
+设置 `DSH_DESKTOP_WELCOME=0` 后，启动、退出账号或账号失效时均不显示原生欢迎窗，直接进入工作区。本地 AI.pm 启动器使用此模式；API Key 配置保留在工作区客户端中。
 
 仅向应用提供的 `dshOnboarding.hasApiKey()` preload 方法返回欢迎后端当前的 API Key 存在状态布尔值；原生登录与引导共用凭证发现逻辑，且只有受管理的应用主 frame 可以调用。
 
