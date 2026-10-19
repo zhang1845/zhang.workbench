@@ -4,6 +4,12 @@
 
 `zhang.workbench` V0.1 是基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 定制的本地工作台，提供文件夹式工作区首页、简化的项目对话界面、可稍后添加的多模型 API Key 配置以及会话累计 Token 统计。右侧文件夹信息栏悬停展开，不展示本地路径。保留上游 MIT 许可证及源码来源说明。
 
+## 文档工作台
+
+本地工作台整合了 [Simin-Lab](https://github.com/chusimin/Simin-Lab) 的文档、AI 讨论与修改审阅流程，并保留其 MIT 署名。项目内同时展示文档列表、Markdown 阅读区和原有 AI 对话。新建文档与 AI 提出的修改需要预览并确认后才会写入；取消不会修改文档。工作台保留 zhang.workbench 品牌及模型提供商设置。
+
+项目默认保存在源码目录下已被 Git 忽略的 `projects/` 中。已有工作区与会话不会搬动，可从**设置 → 原有工作区与会话**进入之前的界面。文档流程目前支持 Markdown 和纯文本文件，不导入 Simin-Lab 的示例项目或 PM Skills。
+
 ## 从源码运行本版本
 
 需要 Node.js 22.19+ 或 24+ 以及 pnpm 11.7.0。克隆本仓库，安装依赖、构建，再启动本地网页界面：

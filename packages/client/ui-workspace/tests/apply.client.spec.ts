@@ -1,6 +1,7 @@
+// @vitest-environment jsdom
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import { Context } from '@deepseek-ai/cordis'
-import { describe, expect, it, onTestFinished, vi } from 'vitest'
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 import type {
   SessionListState, SessionReference, SessionSummary,
 } from '@deepseek-ai/dsh-api-session-controller/client'
@@ -29,6 +30,7 @@ import { UNGROUPED_KEY } from '../src/client/tree.ts'
 import { apply as hostApply } from '../src/index.ts'
 
 const sid = (id: string) => id as SessionId
+beforeEach(() => { localStorage.clear() })
 const summary = (id: string, updatedAt: number): SessionSummary => ({
   id: sid(id), displayTitle: id, running: false, blank: false, updatedAt, retainedBy: {},
 })

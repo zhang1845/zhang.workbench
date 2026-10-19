@@ -176,6 +176,8 @@ export function apply(ctx: ClientContext): void {
     const shellHandle = createSettingsShellStore()
     const shellInstance = shellHandle.create()
     const shellStore: typeof shellHandle = { ...shellHandle, create: () => shellInstance }
+    const openWorkbenchSettings = (): void => { shellInstance.actions.openSection('models') }
+    window.addEventListener('aipm-open-settings', openWorkbenchSettings)
     const disposeCommand = ctx.shortcuts.register({
       id: 'settings.open' as ShortcutCommandId, label: () => t('shortcut.open'), aliases: ['settings', 'preferences'],
       defaults: {
@@ -210,7 +212,11 @@ export function apply(ctx: ClientContext): void {
       },
       inject: shellInjected,
     }, SettingsRoot)
-    return () => { disposeCommand(); disposeSlot() }
+    return () => {
+      window.removeEventListener('aipm-open-settings', openWorkbenchSettings)
+      disposeCommand()
+      disposeSlot()
+    }
   })
 
   ctx.slots.inject('settings.trigger', () =>

@@ -9,7 +9,7 @@ import css from './ProjectWelcome.module.css'
  * @returns the decorative orb and welcome headings.
  */
 export function ProjectWelcome({ t }: PropsLocale<'conversation'>) {
-  return <section className={css.root} aria-label={t('project.welcome')}>
+  return <section className={css.root} aria-label={t('project.welcome')} data-project-welcome="">
     <div className={css.orb} aria-hidden="true" />
     <p className={css.greeting}>{t('project.greeting')}</p>
     <h1>{t('project.question')}</h1>
@@ -26,7 +26,7 @@ export function ProjectShortcuts({ t, onChoose, disabled }: PropsLocale<'convers
   onChoose: (text: string) => void
   disabled: boolean
 }) {
-  return <section className={css.shortcuts} aria-label={t('project.quickTasks')}>
+  return <section className={css.shortcuts} aria-label={t('project.quickTasks')} data-project-shortcuts="">
     {(['requirements', 'document', 'summary'] as const).map(task => <button key={task} aria-label={t(`project.task.${task}`)} disabled={disabled} onClick={() => onChoose(t(`project.prompt.${task}`))}>
       <span className={css.cardTitle}>{task === 'summary' ? <IconFolderCloseRegular size={16} /> : <IconNewChatOutlineRegular size={16} />}<span>{t(`project.task.${task}`)}</span></span>
       <span className={css.cardDescription}>{t(`project.description.${task}`)}</span>

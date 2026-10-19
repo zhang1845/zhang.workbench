@@ -4136,8 +4136,8 @@ describe('ChatView', () => {
     expect(status?.lastElementChild?.textContent).toBe('深度求索中')
     const icon = status?.querySelector('svg')?.parentElement
     expect(icon?.getAttribute('aria-hidden')).toBe('true')
-    expect(icon?.firstElementChild?.tagName).toBe('SPAN')
-    expect(icon?.querySelectorAll('path')).toHaveLength(1)
+    expect(icon?.querySelector('svg[data-brand-mark="ai-pm"]')).not.toBeNull()
+    expect(icon?.querySelectorAll('image')).toHaveLength(1)
     expect(icon?.getAttribute('style')).toBeNull()
     expect(status?.querySelector('animate')).toBeNull()
     act(() => { h.setSession({ running: false }) })

@@ -15,6 +15,8 @@ import type {} from '@deepseek-ai/dsh-client-ui-theme/client'
 import type { HostObservable, SnapshotSelectorHook } from '@deepseek-ai/dsh-client-ui-slots'
 import type { PanelInfo } from './service.ts'
 import { AppFrame } from './AppFrame.tsx'
+import { WorkbenchFrame } from './WorkbenchFrame.tsx'
+import { siminEn, siminZh, type SiminKey } from './simin-locales.ts'
 import { createLayoutStore } from './stores.ts'
 import { LayoutController } from './service.ts'
 import type { ShortcutCommandId } from '@deepseek-ai/dsh-client-shortcuts/client'
@@ -41,6 +43,8 @@ declare module '@deepseek-ai/cordis' {
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
+    /** Document-oriented local workbench copy. */
+    simin: SiminKey
     /** Layout keyboard command labels. */
     'shortcuts.layout': keyof typeof zh
   }
@@ -156,6 +160,7 @@ export const inject = ['slots', 'theme', 'locale', 'shortcuts']
  * @param ctx - client root context.
  */
 export function apply(ctx: ClientContext): void {
+  ctx.effect(() => ctx.locale.register('simin', { zh: siminZh, en: siminEn }), 'workbench: dictionaries')
   ctx.effect(() => ctx.locale.register('shortcuts.layout', { zh, en }), 'layout: command labels')
   const t = ctx.locale.bind('shortcuts.layout')
 
@@ -175,19 +180,30 @@ export function apply(ctx: ClientContext): void {
       ctx.slots.entries('main').some(entry => entry.options.key === id), panelInfo)
     const disposePanelInfo = ctx.slots.provideRoot({ hooks: { panelInfo: layout.panelInfo } })
     const disposeService = ctx.reflect.provide('layout', layout)
-    const disposeRegistration = ctx.slots.register({
-      name: 'root',
-      locale: 'common',
-      children: {
-        'sidebar': { kind: 'single', scope: 'root' },
-        'main': { kind: 'keyed', scope: 'root' },
-        'rightbar': { kind: 'single', scope: 'root' },
-        'shell.bottom': { kind: 'single', scope: 'root' },
-        'shell.overlay': { kind: 'list', scope: 'root' },
-        'shell.leading': { kind: 'single', scope: 'root' },
-      },
-      store,
-    }, AppFrame)
+    const localWorkbench = ['AI.pm工作台', 'zhang.workbench'].includes(process.env.DSH_CLIENT_TITLE ?? '')
+    const disposeRegistration = localWorkbench
+      ? ctx.slots.register({
+        name: 'root', locale: 'simin', store,
+        children: {
+          'sidebar': { kind: 'single', scope: 'root' },
+          'main': { kind: 'keyed', scope: 'root' },
+          'rightbar': { kind: 'single', scope: 'root' },
+          'shell.bottom': { kind: 'single', scope: 'root' },
+          'shell.overlay': { kind: 'list', scope: 'root' },
+          'shell.leading': { kind: 'single', scope: 'root' },
+        },
+      }, WorkbenchFrame)
+      : ctx.slots.register({
+        name: 'root', locale: 'common', store,
+        children: {
+          'sidebar': { kind: 'single', scope: 'root' },
+          'main': { kind: 'keyed', scope: 'root' },
+          'rightbar': { kind: 'single', scope: 'root' },
+          'shell.bottom': { kind: 'single', scope: 'root' },
+          'shell.overlay': { kind: 'list', scope: 'root' },
+          'shell.leading': { kind: 'single', scope: 'root' },
+        },
+      }, AppFrame)
     const disposeShortcut = ctx.shortcuts.register({
       id: 'sidebar.left.toggle' as ShortcutCommandId, label: () => t('toggle'), aliases: ['sidebar', 'toggle left sidebar'],
       defaults: {

@@ -30,7 +30,7 @@
   padding: 0 var(--dsh-composer-side-clearance);
 }
 
-:global([data-project-conversation]) .card { border-radius: 24px; border: 1px solid var(--dsw-alias-border-l3); box-shadow: var(--dsw-elevation-soft); }
+:global([data-project-conversation]) .card { border-radius: var(--dsw-radius-panel); border: 0; box-shadow: var(--dsw-elevation-soft); }
 
 .notice {
   width: 100%;

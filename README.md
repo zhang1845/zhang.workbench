@@ -4,6 +4,12 @@ English | [中文](README.zh.md)
 
 `zhang.workbench` V0.1 is a locally customized workbench based on [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). It provides a folder-based workspace home, a simplified project chat view, optional API Key onboarding for multiple model providers, and cumulative session token usage. Folder information appears on hover at the right edge and does not display the local path. The upstream MIT license and source attribution are retained.
 
+## Document workbench
+
+The local workbench integrates the document, AI discussion, and change-review workflow from [Simin-Lab](https://github.com/chusimin/Simin-Lab), with its MIT attribution retained. Projects show a document list, Markdown reader, and the existing AI conversation together. New documents and AI-proposed edits require preview and confirmation before writing; cancelling leaves the document unchanged. The workbench retains the zhang.workbench brand and model-provider settings.
+
+Projects use the checkout's ignored `projects/` directory by default. Existing workspaces and sessions are not moved: open **Settings → Existing workspaces and sessions** to use the previous interface. The document workflow currently supports Markdown and plain-text files; it does not import Simin-Lab's sample projects or PM Skills.
+
 ## Run this edition from source
 
 Requires Node.js 22.19+ or 24+ and pnpm 11.7.0. Clone this repository, install dependencies, build, and launch the local Web UI:

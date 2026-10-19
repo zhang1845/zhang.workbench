@@ -7,6 +7,7 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
 >
   <div
     class="root collapsed railIn quietBars"
+    data-local-project="false"
     data-workbench-home="false"
     style=""
   >
@@ -107,6 +108,7 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
 >
   <div
     class="root quietBars"
+    data-local-project="false"
     data-workbench-home="false"
     style="width: 300px;"
   >
@@ -132,10 +134,10 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
             >
               <svg
                 aria-hidden="true"
-                data-content="965fe321"
-                fill="none"
-                height="17.6580310880829"
-                viewBox="0 0 23.16 17.04"
+                data-brand-mark="ai-pm"
+                data-content="264cfb37"
+                height="24"
+                viewBox="0 0 1024 1024"
                 width="24"
               />
             </div>
@@ -244,10 +246,10 @@ exports[`sidebar shell snapshots > renders Windows caption controls in expanded 
         >
           <svg
             aria-hidden="true"
-            data-content="965fe321"
-            fill="none"
-            height="11.7720207253886"
-            viewBox="0 0 23.16 17.04"
+            data-brand-mark="ai-pm"
+            data-content="264cfb37"
+            height="16"
+            viewBox="0 0 1024 1024"
             width="16"
           />
         </span>
@@ -282,6 +284,7 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
 >
   <div
     class="root collapsed railIn quietBars"
+    data-local-project="false"
     data-workbench-home="false"
     style=""
   >
@@ -304,10 +307,10 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
           >
             <svg
               aria-hidden="true"
-              data-content="965fe321"
-              fill="none"
-              height="17.6580310880829"
-              viewBox="0 0 23.16 17.04"
+              data-brand-mark="ai-pm"
+              data-content="264cfb37"
+              height="24"
+              viewBox="0 0 1024 1024"
               width="24"
             />
           </div>
@@ -400,6 +403,7 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
 >
   <div
     class="root quietBars"
+    data-local-project="false"
     data-workbench-home="false"
     style="width: 300px;"
   >
@@ -425,10 +429,10 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
             >
               <svg
                 aria-hidden="true"
-                data-content="965fe321"
-                fill="none"
-                height="17.6580310880829"
-                viewBox="0 0 23.16 17.04"
+                data-brand-mark="ai-pm"
+                data-content="264cfb37"
+                height="24"
+                viewBox="0 0 1024 1024"
                 width="24"
               />
             </div>
@@ -537,10 +541,10 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
         >
           <svg
             aria-hidden="true"
-            data-content="965fe321"
-            fill="none"
-            height="11.7720207253886"
-            viewBox="0 0 23.16 17.04"
+            data-brand-mark="ai-pm"
+            data-content="264cfb37"
+            height="16"
+            viewBox="0 0 1024 1024"
             width="16"
           />
         </span>
@@ -575,6 +579,7 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
 >
   <div
     class="root quietBars"
+    data-local-project="false"
     data-workbench-home="false"
     style="width: 300px;"
   >
@@ -600,10 +605,10 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
             >
               <svg
                 aria-hidden="true"
-                data-content="965fe321"
-                fill="none"
-                height="17.6580310880829"
-                viewBox="0 0 23.16 17.04"
+                data-brand-mark="ai-pm"
+                data-content="264cfb37"
+                height="24"
+                viewBox="0 0 1024 1024"
                 width="24"
               />
             </div>
@@ -712,10 +717,10 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
         >
           <svg
             aria-hidden="true"
-            data-content="965fe321"
-            fill="none"
-            height="11.7720207253886"
-            viewBox="0 0 23.16 17.04"
+            data-brand-mark="ai-pm"
+            data-content="264cfb37"
+            height="16"
+            viewBox="0 0 1024 1024"
             width="16"
           />
         </span>

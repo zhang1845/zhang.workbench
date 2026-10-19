@@ -1,0 +1,11 @@
+version: 1
+scenario: zhang-project-save
+profile: headless
+composition: zhang-workbench
+recording: authored
+header:
+  class: zhang-workbench
+  pin: true
+  toolSchemasSource: text-turn
+workspace:
+  final: true

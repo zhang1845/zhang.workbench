@@ -14,7 +14,7 @@
 
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createRequire } from 'node:module'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import type { Context } from '@deepseek-ai/cordis'
@@ -28,6 +28,9 @@ import type {} from '@deepseek-ai/cordis-plugin-loader'
 import type {} from '@deepseek-ai/dsh-host-webserver'
 import type {} from '@deepseek-ai/dsh-shell-env'
 import { parsePublicUrl } from './public-url.ts'
+import { AIPM_PRODUCT_ROOT, handleAipmRequest, SIMIN_ROUTES } from './aipm-products.ts'
+import { installSiminProposals, SiminProposals } from './simin-proposals.ts'
+import { SiminFiles } from './simin-files.ts'
 
 /** Stable Cordis plugin name. */
 export const name = 'web-app'
@@ -65,6 +68,8 @@ export interface Config {
   publicUrl?: string
   /** Explicit `--trusted-host` authorities from this invocation. */
   trustedHosts: string[]
+  /** Local document project root; existing workspaces are not moved. */
+  projectRoot?: string
 }
 
 export const Config: z<Config> = z.object({
@@ -73,6 +78,10 @@ export const Config: z<Config> = z.object({
   surfaceContext: z.boolean().default(true),
   publicUrl: z.transform(z.string(), value => parsePublicUrl(value).href),
   trustedHosts: z.array(String).default([]),
+  projectRoot: z.transform(z.string(), (value) => {
+    if (!value.trim()) throw new Error('web-app: projectRoot must not be empty')
+    return resolve(value)
+  }).default(AIPM_PRODUCT_ROOT),
 })
 
 /** Bind-dependent Web values shared by the trust fence and URL display. */
@@ -248,6 +257,17 @@ export function apply(ctx: Context, config: Config): void {
   const handoffBrowser = config.openBrowser && !launchedThroughSsh(launchEnvironmentOf(ctx))
   // Release dependent rows only after bind-dependent trust has been sampled once.
   ctx.provide(WEB_RUNTIME_SERVICE, runtime)
+  const files = new SiminFiles(config.projectRoot ?? AIPM_PRODUCT_ROOT)
+  const proposals = new SiminProposals(files)
+  installSiminProposals(ctx, proposals)
+  for (const path of SIMIN_ROUTES) {
+    ctx.effect(() => ctx.webServer.register({
+      kind: 'exact', path,
+      handler: async (req, res) => {
+        await handleAipmRequest(req, res, { files, proposals })
+      },
+    }), `workbench: ${path}`)
+  }
   ctx.plugin(FrontendStatic, { distIndex: internals.resolveDistIndex() })
   if (config.surfaceContext) {
     ctx.inject(['systemPrompt'], (promptCtx) => {

@@ -74,6 +74,11 @@ describe('bundleRoster on a scratch installation', () => {
   const scratch = new Scratch()
   afterAll(() => { rmSync(scratch.root, { recursive: true, force: true }) })
 
+  it('resolves a bundle that mounts its own Host runtime without requiring a self dependency', () => {
+    scratch.bundle('@t/self-runtime', '- insert:\n    - id: runtime\n      name: \'@t/self-runtime\'\n')
+    expect(scratch.roster(['@t/self-runtime'])).toEqual([])
+  })
+
   it('resolves a linked bundle dependency before an unrelated ancestor package', () => {
     const linked = new Scratch()
     onTestFinished(() => { rmSync(linked.root, { recursive: true, force: true }) })

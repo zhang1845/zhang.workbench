@@ -24,10 +24,10 @@
 
 /* Local project: a compact navigation rail beside the live session list. */
 .root[data-local-project='true']:not(.collapsed) { position: relative; padding-left: 58px; padding-right: 12px; }
-.root[data-local-project='true']:not(.collapsed)::before { content: ''; position: absolute; left: 44px; top: 54px; bottom: 12px; width: 1px; background: var(--dsw-alias-border-l3); }
+.root[data-local-project='true']:not(.collapsed)::before { content: ''; position: absolute; left: 44px; top: 54px; bottom: 12px; width: 0.5px; background: var(--dsw-alias-border-l3); }
 .root[data-local-project='true']:not(.collapsed) .brandMark { position: absolute; left: 10px; top: 72px; background: none; }
 .root[data-local-project='true']:not(.collapsed) .brandName { font-size: 13px; }
-.root[data-local-project='true']:not(.collapsed) .newSession { background: var(--dsw-alias-label-primary); color: var(--dsw-alias-bg-base); border-radius: 999px; }
+.root[data-local-project='true']:not(.collapsed) .newSession { background: var(--dsw-alias-label-primary); color: var(--dsw-alias-bg-base); border-radius: 999px; corner-shape: round; }
 .root[data-local-project='true']:not(.collapsed) :global([data-workbench-nav]) { position: absolute; left: 6px; top: 122px; width: 32px; margin: 0; padding: 0; }
 .root[data-local-project='true']:not(.collapsed) :global([data-workbench-nav]) button { width: 32px; padding: 8px; justify-content: center; }
 .root[data-local-project='true']:not(.collapsed) :global([data-workbench-nav]) button > span { display: none; }
@@ -232,7 +232,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  height: 64px;
+  height: 60px;
   padding: 8px 0 8px 4px;
   margin-bottom: 12px;
   box-sizing: border-box;
@@ -290,6 +290,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
+  corner-shape: round;
   background: none;
   color: var(--dsw-alias-label-primary-inverted);
 }
@@ -514,7 +515,7 @@
   padding: 6px 10px;
   box-sizing: border-box;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--dsw-radius-sm);
   background: transparent;
   color: var(--dsw-alias-label-primary);
   font: inherit;
@@ -583,8 +584,8 @@
 .root[data-workbench-home='true'] .regionArea { flex: 0 1 auto; max-height: 60%; overflow: auto; }
 .root[data-workbench-home='true'] .panelList { margin-top: 2px; }
 .root .buildVersion { display: none; }
-.localIdentity { display: flex; align-items: center; gap: 10px; padding: 18px 6px 14px; margin-top: 16px; border-top: 1px solid var(--dsw-alias-border-l2); }
-.localAvatar { display: flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--dsw-alias-bg-module-platform); color: var(--dsw-alias-label-primary); }
+.localIdentity { display: flex; align-items: center; gap: 10px; padding: 18px 6px 14px; margin-top: 16px; border-top: 0.5px solid var(--dsw-alias-border-l2); }
+.localAvatar { display: flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 30px; border-radius: 50%; corner-shape: round; background: var(--dsw-alias-bg-module-platform); color: var(--dsw-alias-label-primary); }
 .localIdentityText { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; font-size: 12px; }
 .localIdentityText span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .localIdentityText small { font-size: 11px; color: var(--dsw-alias-label-secondary); }

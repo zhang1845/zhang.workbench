@@ -7,6 +7,19 @@
   background: var(--dsw-alias-bg-base);
 }
 
+.rightbarFloat {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 20;
+}
+.rightbarFloat[hidden] { display: none; }
+.legacyFrame { height: 100%; position: relative; }
+.returnWorkbench {
+  position: absolute; top: calc(12px + var(--dsh-frame-top-clearance, 0px)); left: 50%; z-index: 30;
+  border: 0.5px solid var(--dsw-alias-border-l3); border-radius: 999px; corner-shape: round; padding: 6px 12px;
+  background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); cursor: pointer;
+}
+
 /* Only a discrete collapse/expand toggle eases the tracks (the TSX holds
    data-animating across the toggle on the deepsuite sider curve). Steady-state
    tracks move only with the viewport, and those updates must land instantly:

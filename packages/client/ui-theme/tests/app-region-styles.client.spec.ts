@@ -67,6 +67,12 @@ interface ChromeRow {
 
 const CHROME_ROWS: readonly ChromeRow[] = [
   {
+    file: 'client/ui-layout/src/client/SiminShell.module.css',
+    selector: '.header',
+    markup: 'client/ui-layout/src/client/SiminShell.tsx',
+    height: ['min-height', '64px'],
+  },
+  {
     file: 'client/ui-settings-account/src/client/OnboardingSurface.module.css',
     selector: '.dragBand',
     markup: 'client/ui-settings-account/src/client/OnboardingSurface.tsx',

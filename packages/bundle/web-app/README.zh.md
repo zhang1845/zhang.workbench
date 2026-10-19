@@ -55,6 +55,9 @@ dsh --profile web --no-open --port 8080
 | `surfaceContext` | `true` | 给 agent 提供 GUI 定位上下文，并把 `DSH_WEB_URL` 暴露给其 shell 命令 |
 | `publicUrl` | 未设置 | 对外公告的 HTTP(S) 应用根；否则公告监听器的 loopback URL |
 | `trustedHosts` | `[]` | 允许从网络访问 GUI 的额外主机 |
+| `projectRoot` | 源码目录中的 `projects/` | 本地文档项目；不搬动已有工作区 |
+
+本地文档工作台支持不超过 2 MB 的 Markdown 与纯文本文件。其 `/aipm/` 路由要求 loopback 来源连接、loopback Host 与受认可的本地 origin。写入预览不等于保存，确认时会在写入前检查文档版本。取消保留文件，冲突修改需要重新预览。项目变更拒绝符号链接及项目根目录之外的路径。这些仅限本地使用的路由不提供公开文档服务。
 
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-app)列出了本运行时插件接受的字段及其 JSDoc。随发行版交付的组合插入 `schedule` 服务行与 `ui-schedule` 任务页面行，时钟读数与四个提醒工具则属于 `standard`、`cordis` 与 `ptc` 三个 preset。这三个 preset 的 `tool-subagent` 与 `tool-subagent-fork` 两行都 deny 这四个工具，因此被委派子 agent 的作用域不会列出它们。
 
@@ -144,7 +147,7 @@ URL 行与浏览器交接都是就绪信号：监督方一观察到该行就发�
 
 #### Token 影响
 
-每个会话一行源码说明和一段提示词，外加两行受管环境变量；每个进程内保持恒定。
+每个会话一行源码说明和一段提示词，外加两行受管环境变量；每个进程内保持恒定。文档项目中的会话还会收到要求确认写入的项目范围指令。批准后的写入由原有工具执行；该范围内阻止 shell 与代码执行捷径，以防绕过审阅。
 
 #### KV Cache 影响
 

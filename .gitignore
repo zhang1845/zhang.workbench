@@ -4,6 +4,7 @@ CLAUDE.local.md
 .env.*.local
 .dsh-home/
 /workspaces/
+/projects/
 /default-workspace/
 /*.app/
 apps/desktop/.env.windows

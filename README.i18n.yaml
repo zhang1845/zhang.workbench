@@ -2,33 +2,42 @@
 # section, a hash of its English and Chinese blocks outside code blocks and generated regions.
 # After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write README.md
-/deepseek-harness:
-  en: f68c4f080ce55ff2
-  zh: 88a76d7f7f0b260e
-/deepseek-harness/developer-preview:
+/zhang-workbench:
+  en: af2e9ac9cb553704
+  zh: 4e22ead9a96fb8b6
+/zhang-workbench/document-workbench:
+  en: cfbd9bda4d8162b8
+  zh: e0f31fcf38301acd
+/zhang-workbench/run-this-edition-from-source:
+  en: 1a26b13e7961dc7e
+  zh: b7c415d93aefe412
+/zhang-workbench/upstream-framework:
+  en: 05103a13d07fcc7b
+  zh: 92da734b3d6210a9
+/zhang-workbench/developer-preview:
   en: 4ef4d8a71ac143f0
   zh: 1bfc3149ba8e5543
-/deepseek-harness/run:
+/zhang-workbench/run:
   en: 4e0248e4c6474fc6
   zh: eb2fb8d78c7d6bc0
-/deepseek-harness/run/run-from-npm:
+/zhang-workbench/run/run-from-npm:
   en: e22005cd42e6cbad
   zh: 0f536f4208df1d60
-/deepseek-harness/run/run-from-source:
+/zhang-workbench/run/run-from-source:
   en: 819e3f7c144d0d64
   zh: de815f040975dba7
-/deepseek-harness/community-and-support:
+/zhang-workbench/community-and-support:
   en: 20acf6451fdc869b
   zh: d06246dd019ecef7
-/deepseek-harness/contributing:
+/zhang-workbench/contributing:
   en: cabc2d3e9f8898bd
   zh: 83b6d238bae29ce3
-/deepseek-harness/development:
+/zhang-workbench/development:
   en: 803ca2b11b497bed
   zh: 8b4071eb0e7783ef
-/deepseek-harness/citation:
+/zhang-workbench/citation:
   en: 6704e9e5a8d49a91
   zh: 85c9cdd8d56f8e9d
-/deepseek-harness/license:
+/zhang-workbench/license:
   en: 926995344fc1c72b
   zh: c92fab5abf85932f

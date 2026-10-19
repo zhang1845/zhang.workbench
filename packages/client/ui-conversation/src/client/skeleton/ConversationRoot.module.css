@@ -555,7 +555,7 @@ button.crumb:hover {
 .projectHeader { padding: 18px 24px 12px; grid-template-columns: auto minmax(0, 1fr); }
 .projectTitle { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; }
 .projectTitle > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 500; }
-.projectTitle button { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: none; border-radius: 999px; background: var(--dsw-alias-label-primary); color: var(--dsw-alias-bg-base); cursor: pointer; font: inherit; font-size: 12px; -webkit-app-region: no-drag; }
+.projectTitle button { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: none; border-radius: 999px; corner-shape: round; background: var(--dsw-alias-label-primary); color: var(--dsw-alias-bg-base); cursor: pointer; font: inherit; font-size: 12px; -webkit-app-region: no-drag; }
 .projectHeader > .titleRow { grid-column: 1 / -1; }
 .projectHeader.headerBlank .titleRow { display: contents; }
 .projectHeader.headerBlank .headerCorner { position: absolute; right: 20px; top: 18px; }

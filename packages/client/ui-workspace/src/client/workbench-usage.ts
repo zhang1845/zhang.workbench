@@ -9,7 +9,14 @@ import type {} from '@deepseek-ai/dsh-token-meter/client'
  * @param sessions - current shared catalog and projection snapshots.
  * @returns known usage and completeness, including explicit read failures.
  */
-export function workspaceUsage(ids: readonly SessionId[], sessions: SessionListState) {
+export function workspaceUsage(ids: readonly SessionId[], sessions: SessionListState): {
+  input: number
+  output: number
+  total: number
+  known: number
+  count: number
+  failed: boolean
+} {
   let input = 0
   let output = 0
   let known = 0

@@ -55,6 +55,9 @@ Saved model selections override the composition default. The settings card accep
 | `surfaceContext` | `true` | Give the agent GUI-orientation context and expose `DSH_WEB_URL` to its shell commands |
 | `publicUrl` | Unset | Advertised HTTP(S) application root; otherwise announce the listener's loopback URL |
 | `trustedHosts` | `[]` | Extra hosts allowed to reach the GUI from the network |
+| `projectRoot` | Checkout `projects/` | Local document projects; existing workspaces are not moved |
+
+The local document workbench supports Markdown and plain-text files up to 2 MB. Its `/aipm/` routes require a loopback peer, a loopback Host, and an accepted local origin. A write preview is not a save: confirmation checks the document version before writing. Cancellation preserves the file, and a conflicting edit requires a fresh preview. Project mutations reject symbolic links and paths outside the project root. These local-only routes are not a public document service.
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-app) lists this runtime plugin's accepted fields and their JSDoc. The shipped composition inserts the `schedule` service row and the `ui-schedule` task page row, while the clock reading and the four reminder tools belong to the `standard`, `cordis`, and `ptc` presets. The `tool-subagent` and `tool-subagent-fork` rows in those presets deny the four tools, so a delegated child's scope never lists them.
 
@@ -144,7 +147,7 @@ When `surfaceContext` is true, the `harness:source` section identifies the on-di
 
 #### Token effect
 
-One source line and one prompt paragraph per session plus two managed-environment variable lines; constant per process.
+One source line and one prompt paragraph per session plus two managed-environment variable lines; constant per process. A session inside a document project additionally receives a project-scope instruction for confirmed writes. The original tools perform an approved write; shell and code-execution shortcuts are blocked in that scope to prevent bypassing review.
 
 #### KV Cache effect
 
