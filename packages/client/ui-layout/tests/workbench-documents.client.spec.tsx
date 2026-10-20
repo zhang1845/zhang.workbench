@@ -38,6 +38,21 @@ async function openProject() {
   return view
 }
 
+it('labels populated and empty folder covers with real project names and document counts', async () => {
+  snapshot.projects.push({ name: '新的创意项目', path: '/test/projects/新的创意项目', documents: [], files: [] })
+  render(<SiminShell chat={null} nativeSettings={null} t={makeTranslate(siminZh)} />)
+  const populated = await screen.findByRole('button', { name: '产品 · 1 篇文档' })
+  const empty = screen.getByRole('button', { name: '新的创意项目 · 0 篇文档' })
+  expect(within(populated).getByText('产品')).toBeTruthy()
+  expect(within(populated).getByText('1 篇文档')).toBeTruthy()
+  expect(within(empty).getByText('新的创意项目')).toBeTruthy()
+  expect(within(empty).getByText('0 篇文档')).toBeTruthy()
+  expect(mutations).toEqual([])
+  fireEvent.click(empty)
+  fireEvent.click(await screen.findByRole('button', { name: siminZh.overview }))
+  expect(await screen.findByRole('heading', { name: '新的创意项目' })).toBeTruthy()
+})
+
 it('keeps the local brand, renders real Markdown and does not display disk paths', async () => {
   const view = await openProject()
   expect(screen.getByText('zhang.workbench')).toBeTruthy()

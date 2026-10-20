@@ -38,28 +38,46 @@ function plain(name: string): string { return name.replace(/\.(md|txt)$/iu, '') 
 function date(value: number): string { return new Date(value).toLocaleDateString(undefined, { month: '2-digit', day: '2-digit' }) }
 function Star() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5l2.1 7.4 7.4 2.1-7.4 2.1-2.1 7.4-2.1-7.4-7.4-2.1 7.4-2.1z" /></svg> }
 // Normalized coordinates keep the pocket proportional at every card size.
-const pocketOutline = 'M.005 .0923 Q.005 .0077 .06 .0077 H.345 Q.385 .0077 .41 .0462 L.495 .1769 Q.52 .2154 .56 .2154 H.94 Q.995 .2154 .995 .3 V.8308 Q.995 .9923 .89 .9923 H.11 Q.005 .9923 .005 .8308 Z'
+const pocketOutline = 'M.005 .14 Q.005 .015 .085 .045 L.445 .25 Q.5 .28 .555 .25 L.915 .045 Q.995 .015 .995 .14 V.72 Q.995 .985 .85 .985 H.15 Q.005 .985 .005 .72 Z'
 function Folder({ project, onOpen, t }: { project: SiminProject; onOpen: () => void; t: Copy }) {
   const pocketId = useId()
   const label = `${project.name} · ${t('fileCount', { count: project.documents.length })}`
   return <Tooltip label={label} side="bottom" portal><button type="button" className={css.folderCard} aria-label={label} onClick={onOpen}>
     <span className={css.folderArt}>
-      <svg className={css.folderBack} viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><path d={pocketOutline} /></svg>
-      <span className={css.paperStack}>{project.files.slice(0, 3).map((file, index) => <span key={file.name} className={`${css.paper} ${css[`paper${index}`]}`}>
-        <span className={css.paperTitle}>{index === 0 ? project.name : plain(file.name)}</span>
-        {index === 0 && <span className={css.paperFile}>{plain(file.name)}</span>}
-        <span className={css.paperPreview}>{file.preview}</span>
-      </span>)}</span>
+      <span className={css.folderBack} aria-hidden="true" />
+      <span className={css.paperStack} aria-hidden="true">
+        <span className={`${css.paper} ${css.paper2}`} />
+        <span className={`${css.paper} ${css.paper1}`} />
+        <span className={`${css.paper} ${css.paper0}`}>
+          <svg className={css.coverArt} viewBox="0 0 160 150">
+            <defs>
+              <linearGradient id={`${pocketId}-halo`} x1="0" y1="0" x2="1" y2="1">
+                <stop stopColor="var(--dsw-static-blue-400)" /><stop offset=".5" stopColor="var(--dsw-alias-state-error-primary)" /><stop offset="1" stopColor="var(--dsw-static-blue-300)" />
+              </linearGradient>
+              <filter id={`${pocketId}-blur`} x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" /></filter>
+            </defs>
+            <g transform="rotate(-18 80 80)">
+              <path d="M35 66 36 28Q36 21 42 26L64 43Q80 36 96 43L118 26Q124 21 124 28L125 66Q139 114 80 132Q21 114 35 66Z" fill={`url(#${pocketId}-halo)`} filter={`url(#${pocketId}-blur)`} transform="translate(6 9)" />
+              <path d="M35 66 36 28Q36 21 42 26L64 43Q80 36 96 43L118 26Q124 21 124 28L125 66Q139 114 80 132Q21 114 35 66Z" fill="var(--dsw-static-neutral-bluish-1000)" />
+              <ellipse cx="60" cy="87" rx="5" ry="6" fill="var(--dsw-static-neutral-bluish-00)" /><ellipse cx="100" cy="87" rx="5" ry="6" fill="var(--dsw-static-neutral-bluish-00)" />
+            </g>
+          </svg>
+        </span>
+      </span>
       <svg className={css.pocket} viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true">
         <defs>
-          <linearGradient id={`${pocketId}-fill`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".78" /><stop offset=".55" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".58" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".66" />
+          <linearGradient id={`${pocketId}-fill`} x1="0" y1="0" x2="1" y2="0">
+            <stop stopColor="var(--dsw-static-neutral-bluish-400)" /><stop offset=".12" stopColor="var(--dsw-static-neutral-bluish-200)" /><stop offset=".45" stopColor="var(--dsw-static-neutral-bluish-60)" /><stop offset=".7" stopColor="var(--dsw-static-neutral-bluish-100)" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-400)" />
+          </linearGradient>
+          <linearGradient id={`${pocketId}-shade`} x1="0" y1="0" x2="0" y2="1">
+            <stop stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".38" /><stop offset=".65" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity="0" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-750)" stopOpacity=".26" />
           </linearGradient>
         </defs>
         <path d={pocketOutline} fill={`url(#${pocketId}-fill)`} />
+        <path d={pocketOutline} fill={`url(#${pocketId}-shade)`} />
       </svg>
-      {project.documents.length === 0 && <span className={css.emptyFolderName}>{project.name}</span>}
-      <span className={css.folderCount}><IconDeliverDocRegular size={11} />{t('fileCount', { count: project.documents.length })}</span>
+      <span className={css.folderName}>{project.name}</span>
+      <span className={css.folderCount}>{t('fileCount', { count: project.documents.length })}</span>
     </span>
   </button></Tooltip>
 }
