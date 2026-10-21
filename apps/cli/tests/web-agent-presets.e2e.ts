@@ -2,7 +2,7 @@ import { createRequire } from 'node:module'
 import { randomUUID } from 'node:crypto'
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
@@ -454,6 +454,91 @@ describe('the shipped Web composition', () => {
     expect((await readFile(skill, 'utf8')).startsWith('---\nname: editing-cordis-compositions')).toBe(true)
   })
 
+  it.each(['standard', 'ptc', 'cordis'])('loads packaged product workflows in %s outside the source checkout', async (preset) => {
+    const project = await mkdtemp(join(tmpdir(), 'zhang-pm-skills-'))
+    try {
+      const handle = await ctx.agents.create({
+        sessionId: SessionId(`pm-skills-${preset}-${randomUUID()}`),
+        meta: { cwd: project },
+        setup: agentCtx => ctx.agentPresets.mount(agentCtx, preset).then(() => undefined),
+      })
+      try {
+        const expected = [
+          'aipm-competitive-analysis', 'aipm-journey-collaboration', 'aipm-prd-writing-review',
+          'aipm-prioritization-scope', 'aipm-problem-definition', 'aipm-product-teardown',
+          'aipm-project-initiation', 'aipm-requirements-management', 'aipm-user-research', 'aipm-user-segmentation',
+        ]
+        const options = { cwd: project, scope: handle.agent }
+        const catalog = await ctx.skills.list(options)
+        expect(catalog.filter(skill => skill.name.startsWith('aipm-')).map(skill => skill.name).sort()).toEqual(expected)
+        const deliverySkills = ['agent-blueprint', 'ai-product-starter']
+        expect(catalog.map(skill => skill.name)).toEqual(expect.arrayContaining(deliverySkills))
+        for (const name of [...expected, ...deliverySkills]) {
+          const skill = await ctx.skills.get(name, options)
+          expect(skill?.invocation).toEqual({ modelInvocable: true, userInvocable: true })
+          expect(skill?.source).toBe('bundled')
+          expect(skill?.path).toBe(join(WEB_BUNDLE, 'skills', name, 'SKILL.md'))
+          expect(skill?.content).toContain('## 工作台中的文档操作')
+          expect(skill?.content.length).toBeLessThan(7500)
+          expect(skill?.resourceBase).toEqual({ kind: 'directory', path: join(WEB_BUNDLE, 'skills', name) })
+          const loaded = await ctx.tools.execute({
+            callId: ToolCallId(`load-${preset}-${name}`),
+            name: preset === 'ptc' ? 'run_code' : 'skill',
+            arguments: preset === 'ptc'
+              ? { description: `Load ${name}`, code: `return await tools.skill({ name: ${JSON.stringify(name)} });` }
+              : { name },
+            signal: new AbortController().signal, agent: handle.agent,
+          })
+          expect(loaded.isError, JSON.stringify(loaded.content)).toBe(false)
+          expect(JSON.stringify(loaded.content)).toContain('## 工作台中的文档操作')
+        }
+      } finally {
+        await handle.dispose()
+      }
+    } finally {
+      await rm(project, { recursive: true, force: true })
+    }
+  })
+
+  it('packages complete product skill references and the optional HTML template', () => {
+    const root = join(WEB_BUNDLE, 'skills')
+    expect(readFileSync(join(root, 'LICENSE'), 'utf8')).toContain('Simin Chu')
+    for (const name of readdirSync(root).filter(item => item.startsWith('aipm-') || ['agent-blueprint', 'ai-product-starter'].includes(item))) {
+      const directory = join(root, name)
+      for (const file of readdirSync(directory, { recursive: true, encoding: 'utf8' }).filter(item => item.endsWith('.md'))) {
+        const markdown = readFileSync(join(directory, file), 'utf8')
+        for (const match of markdown.matchAll(/\]\(([^)]+)\)/gu)) {
+          const target = match[1]!
+          if (/^(?:https?:|#)/u.test(target)) continue
+          expect(statSync(join(dirname(join(directory, file)), target.split('#')[0]!)).isFile()).toBe(true)
+        }
+      }
+    }
+    expect(readFileSync(join(root, 'aipm-project-initiation/references/initiation-report.md'), 'utf8')).toContain('默认使用当前项目内的 Markdown')
+  })
+
+  it('ships self-contained delivery skill resources and original licenses without local engine dependencies', () => {
+    const root = join(WEB_BUNDLE, 'skills')
+    const resources = {
+      'agent-blueprint': ['design.md', 'audit.md', 'iteration.md'],
+      'ai-product-starter': ['prd-and-state.md', 'engineering.md', 'frontend.md', 'deployment.md', 'gates.md'],
+    }
+    for (const [name, references] of Object.entries(resources)) {
+      const directory = join(root, name)
+      const metadata = load(readFileSync(join(directory, 'SKILL.md'), 'utf8').split('---')[1]!) as Record<string, unknown>
+      expect(metadata.name).toBe(name)
+      expect(typeof metadata.description).toBe('string')
+      expect(readdirSync(join(directory, 'references')).sort()).toEqual([...references].sort())
+      for (const file of readdirSync(directory, { recursive: true, encoding: 'utf8' })) {
+        if (!statSync(join(directory, file)).isFile()) continue
+        expect(file).not.toMatch(/\.(?:py|sh|command|env)$/u)
+        expect(readFileSync(join(directory, file), 'utf8')).not.toContain('/Users/zhanglifu/')
+      }
+    }
+    expect(readFileSync(join(root, 'agent-blueprint/LICENSE'), 'utf8')).toContain('Copyright (c) 2024 Hubo')
+    expect(readFileSync(join(root, 'ai-product-starter/LICENSE'), 'utf8')).toContain('Copyright (c) 2025 hubooooooo')
+  })
+
   it('merges the global skill layer into a preset agent\'s catalog, keeping local discovery preset-side', async () => {
     const proj = await mkdtemp(join(tmpdir(), 'dsh-preset-skill-proj-'))
     await mkdir(join(proj, '.dsh', 'skills', 'project-proof'), { recursive: true })
@@ -476,7 +561,10 @@ describe('the shipped Web composition', () => {
     try {
       // The host (global) view carries the deployment-level provider alone:
       // local discovery moved behind the presets with `skill-filesystem`.
-      expect((await ctx.skills.list({ cwd: proj })).map(skill => skill.name)).toEqual(['dsh-badge'])
+      const globalSkills = (await ctx.skills.list({ cwd: proj })).map(skill => skill.name)
+      expect(globalSkills).toContain('dsh-badge')
+      expect(globalSkills).toContain('aipm-problem-definition')
+      expect(globalSkills).not.toContain('project-proof')
 
       // The standard agent's view merges the global layer with its preset's
       // own local discovery over the session cwd.

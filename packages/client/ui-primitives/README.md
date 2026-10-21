@@ -160,6 +160,8 @@ While a reply streams, `MarkdownText` parses incrementally: all but the trailing
 
 ### Geometry and overflow
 
+`useAnchoredMaxHeight` fits bottom-anchored overlays below both the viewport's reserved top edge and every vertically clipping ancestor (`hidden`, `clip`, `auto`, or `scroll`). It keeps a 12px gap inside clipping containers and remeasures on state changes, resize, and captured scroll events, so menu rows scroll within the available area instead of hiding behind a conversation header.
+
 The output cards share one geometry model: `white-space: pre` with horizontal scrolling so column-aligned content keeps its alignment, and a head-plus-tail slice behind an expand button past `maxLines` (default 16) so a long body never stretches the card. `TerminalBlock` parses ANSI into React spans with a per-line column buffer for cursor movement, honoring erase-in-line, tab stops, and character width. Hosts opt out of the shared geometry per surface: rebinding `--dsl-terminal-command-whitespace` / `--dsl-terminal-line-whitespace` to `pre-wrap` wraps commands and output in full with no sideways scroll, `maxLines: Infinity` disables the fold for hosts capping height through `--dsl-terminal-output-max-height` instead, `copyText` overrides the copy payload (and keeps the control rendered before any output), and `runStateDot: false` omits the run-state dot when the surrounding row already carries the state, reclaiming its gutter via `--dsl-terminal-gutter`. The banner divider follows the rendered body, so a running card that streams live output separates its command from the text like a settled card.
 
 </details>

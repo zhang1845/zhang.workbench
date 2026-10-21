@@ -8,10 +8,10 @@ export const SIMIN_OPEN_PROJECT_EVENT = 'aipm-open-project'
 export const SIMIN_WORKSPACE_ERROR_EVENT = 'aipm-workspace-error'
 /** Available workbench pages. */
 export type SiminPage = 'home' | 'project' | 'documents' | 'templates' | 'trash' | 'settings'
-/** Persisted navigation. */
+/** Current navigation, reset to home when the workbench mounts. */
 export interface SiminView { project: string | null; file: string | null; page?: SiminPage; tab?: 'overview' | 'chat' | 'document' }
 /** Display preferences independent of document content. */
-export interface SiminPreferences { remember: boolean; autoOpen: boolean; reduced: boolean; sendMode: 'enter' | 'modEnter' }
+export interface SiminPreferences { autoOpen: boolean; reduced: boolean; sendMode: 'enter' | 'modEnter' }
 const STORAGE_KEY = 'zhang.workbench.view.v1'
 const PREF_KEY = 'zhang.workbench.preferences.v1'
 /**
@@ -27,8 +27,8 @@ export function loadSiminPreferences(): SiminPreferences {
   try {
     const value: unknown = JSON.parse(localStorage.getItem(PREF_KEY) ?? '{}')
     const data = typeof value === 'object' && value !== null ? value as Record<string, unknown> : {}
-    return { remember: data.remember !== false, autoOpen: data.autoOpen !== false, reduced: data.reduced === true, sendMode: data.sendMode === 'modEnter' ? 'modEnter' : 'enter' }
-  } catch (error: unknown) { void error; return { remember: true, autoOpen: true, reduced: false, sendMode: 'enter' } }
+    return { autoOpen: data.autoOpen !== false, reduced: data.reduced === true, sendMode: data.sendMode === 'modEnter' ? 'modEnter' : 'enter' }
+  } catch (error: unknown) { void error; return { autoOpen: true, reduced: false, sendMode: 'enter' } }
 }
 /**
  * Persist and broadcast the selected preferences.
@@ -39,8 +39,8 @@ export function saveSiminPreferences(next: SiminPreferences): void {
   window.dispatchEvent(new CustomEvent('aipm-preferences-change', { detail: next }))
 }
 /**
- * Restore valid navigation, including the earlier project-only format.
- * @returns last valid navigation, including the earlier project/file-only format.
+ * Read navigation shared by events during the current opening.
+ * @returns valid navigation, including the earlier project/file-only format.
  */
 export function loadSiminView(): SiminView {
   try {

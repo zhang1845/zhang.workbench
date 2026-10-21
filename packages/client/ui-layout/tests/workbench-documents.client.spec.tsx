@@ -6,6 +6,7 @@ import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
 import { SiminShell } from '../src/client/SiminShell.tsx'
 import { siminZh } from '../src/client/simin-locales.ts'
 import type { SiminSnapshot } from '../src/client/simin-api.ts'
+import { loadSiminPreferences, SIMIN_CHANGE_EVENT, SIMIN_OPEN_PROJECT_EVENT } from '../src/client/simin-state.ts'
 
 let snapshot: SiminSnapshot
 let mutations: Record<string, unknown>[]
@@ -37,6 +38,39 @@ async function openProject() {
   act(() => { window.dispatchEvent(new CustomEvent('aipm-workspace-ready', { detail: { path: '/test/projects/产品' } })) })
   return view
 }
+
+it.each(['project', 'documents', 'templates', 'trash', 'settings'])('starts on home instead of restoring %s, even with the old remember preference enabled', async (page) => {
+  localStorage.setItem('zhang.workbench.view.v1', JSON.stringify({ project: '产品', file: '信息.md', page, tab: 'document' }))
+  const preferences = JSON.stringify({ remember: true, autoOpen: false, reduced: true, sendMode: 'modEnter' })
+  localStorage.setItem('zhang.workbench.preferences.v1', preferences)
+  const opened = vi.fn()
+  window.addEventListener(SIMIN_OPEN_PROJECT_EVENT, opened)
+  try {
+    render(<SiminShell chat={null} nativeSettings={null} t={makeTranslate(siminZh)} />)
+    expect(await screen.findByRole('button', { name: '产品 · 1 篇文档' })).toBeTruthy()
+    act(() => { window.dispatchEvent(new CustomEvent(SIMIN_CHANGE_EVENT)) })
+    expect(screen.getByRole('button', { name: '产品 · 1 篇文档' })).toBeTruthy()
+    expect(opened).not.toHaveBeenCalled()
+    expect(vi.mocked(fetch).mock.calls.some(([input]) => String(input).includes('/aipm/file'))).toBe(false)
+    expect(mutations).toEqual([])
+    expect(localStorage.getItem('zhang.workbench.preferences.v1')).toBe(preferences)
+    expect(loadSiminPreferences()).toEqual({ autoOpen: false, reduced: true, sendMode: 'modEnter' })
+  } finally { window.removeEventListener(SIMIN_OPEN_PROJECT_EVENT, opened) }
+})
+
+it('keeps navigation and document access working but returns home on the next opening', async () => {
+  const first = await openProject()
+  fireEvent.click(screen.getByRole('button', { name: '信息' }))
+  expect(await screen.findByRole('heading', { name: '真实正文' })).toBeTruthy()
+  first.unmount()
+  render(<SiminShell chat={null} nativeSettings={null} t={makeTranslate(siminZh)} />)
+  expect(await screen.findByRole('button', { name: '产品 · 1 篇文档' })).toBeTruthy()
+  expect(screen.queryByRole('heading', { name: '真实正文' })).toBeNull()
+  expect(mutations).toEqual([])
+  fireEvent.click(screen.getByRole('button', { name: '设置' }))
+  expect(screen.queryByRole('switch', { name: '记住上次工作进度' })).toBeNull()
+  expect(screen.getByRole('switch', { name: siminZh.autoOpen })).toBeTruthy()
+})
 
 it('labels populated and empty folder covers with real project names and document counts', async () => {
   snapshot.projects.push({ name: '新的创意项目', path: '/test/projects/新的创意项目', documents: [], files: [] })

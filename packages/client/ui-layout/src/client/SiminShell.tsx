@@ -10,7 +10,7 @@ import {
   IconAgentPresetOutlineRegular, IconBrowseOutlineRegular,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
-  loadSiminView, saveSiminView, loadSiminPreferences, saveSiminPreferences,
+  emptySiminView, loadSiminView, saveSiminView, loadSiminPreferences, saveSiminPreferences,
   SIMIN_CHANGE_EVENT, SIMIN_OPEN_PROJECT_EVENT, SIMIN_WORKSPACE_ERROR_EVENT,
 } from './simin-state.ts'
 import type { SiminPage, SiminView } from './simin-state.ts'
@@ -38,7 +38,9 @@ function plain(name: string): string { return name.replace(/\.(md|txt)$/iu, '') 
 function date(value: number): string { return new Date(value).toLocaleDateString(undefined, { month: '2-digit', day: '2-digit' }) }
 function Star() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5l2.1 7.4 7.4 2.1-7.4 2.1-2.1 7.4-2.1-7.4-7.4-2.1 7.4-2.1z" /></svg> }
 // Normalized coordinates keep the pocket proportional at every card size.
-const pocketOutline = 'M.005 .14 Q.005 .015 .085 .045 L.445 .25 Q.5 .28 .555 .25 L.915 .045 Q.995 .015 .995 .14 V.72 Q.995 .985 .85 .985 H.15 Q.005 .985 .005 .72 Z'
+const pocketOpening = 'M.005 .16 C.005 .055 .04 .025 .105 .065 C.25 .145 .395 .275 .5 .275 C.605 .275 .75 .145 .895 .065 C.96 .025 .995 .055 .995 .16'
+const pocketOutline = `${pocketOpening} V.705 C.995 .895 .955 .985 .82 .985 H.18 C.045 .985 .005 .895 .005 .705 Z`
+const coverCatOutline = 'M34 65 34 30Q34 21 42 26L63 41Q80 35 97 41L118 26Q126 21 126 30L126 65C140 108 115 126 80 134C45 126 20 108 34 65Z'
 function Folder({ project, onOpen, t }: { project: SiminProject; onOpen: () => void; t: Copy }) {
   const pocketId = useId()
   const label = `${project.name} · ${t('fileCount', { count: project.documents.length })}`
@@ -52,14 +54,18 @@ function Folder({ project, onOpen, t }: { project: SiminProject; onOpen: () => v
           <svg className={css.coverArt} viewBox="0 0 160 150">
             <defs>
               <linearGradient id={`${pocketId}-halo`} x1="0" y1="0" x2="1" y2="1">
-                <stop stopColor="var(--dsw-static-blue-400)" /><stop offset=".5" stopColor="var(--dsw-alias-state-error-primary)" /><stop offset="1" stopColor="var(--dsw-static-blue-300)" />
+                <stop stopColor="var(--dsw-static-blue-400)" /><stop offset=".55" stopColor="var(--dsw-static-red-400)" /><stop offset="1" stopColor="var(--dsw-static-blue-300)" />
               </linearGradient>
-              <filter id={`${pocketId}-blur`} x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" /></filter>
+              <radialGradient id={`${pocketId}-fur`} cx=".3" cy=".2" r=".85">
+                <stop stopColor="var(--dsw-static-neutral-bluish-800)" /><stop offset=".6" stopColor="var(--dsw-static-neutral-bluish-1000)" />
+              </radialGradient>
+              <filter id={`${pocketId}-blur`} x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8" /></filter>
+              <filter id={`${pocketId}-soft-edge`} x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation=".85" /></filter>
             </defs>
-            <g transform="rotate(-18 80 80)">
-              <path d="M35 66 36 28Q36 21 42 26L64 43Q80 36 96 43L118 26Q124 21 124 28L125 66Q139 114 80 132Q21 114 35 66Z" fill={`url(#${pocketId}-halo)`} filter={`url(#${pocketId}-blur)`} transform="translate(6 9)" />
-              <path d="M35 66 36 28Q36 21 42 26L64 43Q80 36 96 43L118 26Q124 21 124 28L125 66Q139 114 80 132Q21 114 35 66Z" fill="var(--dsw-static-neutral-bluish-1000)" />
-              <ellipse cx="60" cy="87" rx="5" ry="6" fill="var(--dsw-static-neutral-bluish-00)" /><ellipse cx="100" cy="87" rx="5" ry="6" fill="var(--dsw-static-neutral-bluish-00)" />
+            <g transform="rotate(-16 80 80)">
+              <path d={coverCatOutline} fill={`url(#${pocketId}-halo)`} filter={`url(#${pocketId}-blur)`} transform="translate(5 10)" opacity=".8" />
+              <path d={coverCatOutline} fill={`url(#${pocketId}-fur)`} filter={`url(#${pocketId}-soft-edge)`} />
+              <ellipse cx="60" cy="83" rx="5" ry="6" fill="var(--dsw-static-neutral-bluish-00)" /><ellipse cx="100" cy="83" rx="5" ry="6" fill="var(--dsw-static-neutral-bluish-00)" />
             </g>
           </svg>
         </span>
@@ -67,14 +73,19 @@ function Folder({ project, onOpen, t }: { project: SiminProject; onOpen: () => v
       <svg className={css.pocket} viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id={`${pocketId}-fill`} x1="0" y1="0" x2="1" y2="0">
-            <stop stopColor="var(--dsw-static-neutral-bluish-400)" /><stop offset=".12" stopColor="var(--dsw-static-neutral-bluish-200)" /><stop offset=".45" stopColor="var(--dsw-static-neutral-bluish-60)" /><stop offset=".7" stopColor="var(--dsw-static-neutral-bluish-100)" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-400)" />
+            <stop stopColor="var(--dsw-static-neutral-bluish-300)" /><stop offset=".16" stopColor="var(--dsw-static-neutral-bluish-150)" /><stop offset=".46" stopColor="var(--dsw-static-neutral-bluish-50)" /><stop offset=".72" stopColor="var(--dsw-static-neutral-bluish-100)" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-300)" />
           </linearGradient>
+          <radialGradient id={`${pocketId}-light`} cx=".43" cy=".36" r=".75">
+            <stop stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".65" /><stop offset=".65" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".12" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity="0" />
+          </radialGradient>
           <linearGradient id={`${pocketId}-shade`} x1="0" y1="0" x2="0" y2="1">
-            <stop stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".38" /><stop offset=".65" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity="0" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-750)" stopOpacity=".26" />
+            <stop stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity=".2" /><stop offset=".55" stopColor="var(--dsw-static-neutral-bluish-00)" stopOpacity="0" /><stop offset="1" stopColor="var(--dsw-static-neutral-bluish-600)" stopOpacity=".18" />
           </linearGradient>
         </defs>
         <path d={pocketOutline} fill={`url(#${pocketId}-fill)`} />
+        <path d={pocketOutline} fill={`url(#${pocketId}-light)`} />
         <path d={pocketOutline} fill={`url(#${pocketId}-shade)`} />
+        <path d={pocketOpening} className={css.pocketLip} fill="none" />
       </svg>
       <span className={css.folderName}>{project.name}</span>
       <span className={css.folderCount}>{t('fileCount', { count: project.documents.length })}</span>
@@ -96,7 +107,7 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
   t: Copy
   onOpenLegacy?: () => void
 }) {
-  const [view, setView] = useState<SiminView>(() => loadSiminPreferences().remember ? loadSiminView() : { project: null, file: null, page: 'home' })
+  const [view, setView] = useState<SiminView>(emptySiminView)
   const [prefs, setPrefs] = useState(loadSiminPreferences)
   const [snapshot, setSnapshot] = useState(initialSnapshot)
   const [loading, setLoading] = useState(true)
@@ -154,6 +165,7 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
     return () => { window.clearInterval(timer); poll.current?.abort() }
   }, [refresh])
   useEffect(() => {
+    saveSiminView(emptySiminView())
     const changed = (): void => { setView(loadSiminView()); setNavOpen(false); setFocus(false); setSource(false) }
     const error = (event: Event): void => {
       const detail: unknown = (event as CustomEvent).detail
@@ -320,7 +332,7 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
     <section className={css.settingsSection}>
       <h2>{t('preferences')}</h2>
       <div className={css.settingsRows}>
-        {(['remember', 'autoOpen', 'reduced'] as const).map(key => <div key={key} className={css.preference}>
+        {(['autoOpen', 'reduced'] as const).map(key => <div key={key} className={css.preference}>
           <span>{t(key)}</span>
           <Switch className={css.preferenceSwitch} label={t(key)} checked={prefs[key]} onChange={(checked) => {
             const next = { ...prefs, [key]: checked }

@@ -8,7 +8,11 @@
 
 本地工作台整合了 [Simin-Lab](https://github.com/chusimin/Simin-Lab) 的文档、AI 讨论与修改审阅流程，并保留其 MIT 署名。项目内同时展示文档列表、Markdown 阅读区和原有 AI 对话。新建文档与 AI 提出的修改需要预览并确认后才会写入；取消不会修改文档。工作台保留 zhang.workbench 品牌及模型提供商设置。
 
-项目默认保存在源码目录下已被 Git 忽略的 `projects/` 中。已有工作区与会话不会搬动，可从**设置 → 原有工作区与会话**进入之前的界面。文档流程目前支持 Markdown 和纯文本文件，不导入 Simin-Lab 的示例项目或 PM Skills。
+项目默认保存在源码目录下已被 Git 忽略的 `projects/` 中。已有工作区与会话不会搬动，可从**设置 → 原有工作区与会话**进入之前的界面。文档流程目前支持 Markdown 和纯文本文件，不导入 Simin-Lab 的示例项目。
+
+工作台随包集成了 Simin-Lab 的十个 AI 产品经理技能、配套参考材料及 MIT 署名。进入项目对话后，输入 `/aipm-` 选择工作流，或输入 `/aipm-problem-definition` 后接具体任务。技能覆盖问题定义、用户研究与分层、产品拆解、竞品分析、需求管理、优先级、用户旅程、立项和 PRD 审阅；不依赖项目目录加载，最简预设没有技能加载器。文档默认采用 Markdown，保留先审阅后保存；只有明确要求时才使用立项报告 HTML 模板。[组合包说明](packages/bundle/web-app/README.zh.md)。
+
+另有 `/agent-blueprint` 和 `/ai-product-starter` 两个工作流，从用户提供的 Agent Blueprint 与 AI Product Starter Kit 项目适配架构推导、差距检查及分阶段工程交付方法。它们使用当前对话模型与文档审阅，不安装另一套引擎，也不自动部署。[范围与许可](packages/bundle/web-app/README.zh.md#use-this-package)。
 
 ## 从源码运行本版本
 

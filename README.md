@@ -8,7 +8,11 @@ English | [中文](README.zh.md)
 
 The local workbench integrates the document, AI discussion, and change-review workflow from [Simin-Lab](https://github.com/chusimin/Simin-Lab), with its MIT attribution retained. Projects show a document list, Markdown reader, and the existing AI conversation together. New documents and AI-proposed edits require preview and confirmation before writing; cancelling leaves the document unchanged. The workbench retains the zhang.workbench brand and model-provider settings.
 
-Projects use the checkout's ignored `projects/` directory by default. Existing workspaces and sessions are not moved: open **Settings → Existing workspaces and sessions** to use the previous interface. The document workflow currently supports Markdown and plain-text files; it does not import Simin-Lab's sample projects or PM Skills.
+Projects use the checkout's ignored `projects/` directory by default. Existing workspaces and sessions are not moved: open **Settings → Existing workspaces and sessions** to use the previous interface. The document workflow currently supports Markdown and plain-text files; it does not import Simin-Lab's sample projects.
+
+The workbench bundles Simin-Lab's ten AI product-management skills with their references and MIT attribution. In a project conversation, type `/aipm-` to select a workflow, or invoke `/aipm-problem-definition` followed by your task. They cover problem definition, user research and segmentation, product teardown, competitive analysis, requirements, prioritization, journeys, project initiation, and PRD review. The skills load independently of the project directory; the minimal preset has no skill loader. Documents default to Markdown and retain preview-before-save; the initiation HTML template is available only when explicitly requested. [Bundle details](packages/bundle/web-app/README.md).
+
+Two additional workflows, `/agent-blueprint` and `/ai-product-starter`, adapt the supplied Agent Blueprint and AI Product Starter Kit projects for architecture planning, gap checks, and staged engineering delivery. They use the current conversation's model and document review, not a separate engine or automatic deployment. [Scope and licenses](packages/bundle/web-app/README.md#use-this-package).
 
 ## Run this edition from source
 

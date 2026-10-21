@@ -29,6 +29,10 @@ Desktop Mod+B toggles the left sidebar through the same layout action used by it
 
 Builds titled `zhang.workbench` or `AI.pm工作台` use the document workbench: project navigation, document preview, and the existing conversation share one frame. Settings retains the original model-provider dialog and an entry to existing workspaces and sessions. Other build titles retain AppFrame. The workbench uses the current theme tokens and does not display project filesystem paths; its document workflow is adapted from [Simin-Lab](https://github.com/chusimin/Simin-Lab).
 
+Home project cards use silver pocket artwork with curved openings, soft highlights, and layered paper covers. Each card retains the real project name and document count. Paper lifts on hover or keyboard focus; system and workbench reduced-motion preferences keep it still.
+
+Each workbench opening or reload starts on Home, including profiles with the former restore-progress preference enabled. Navigation remains available during the current opening; projects, documents, conversation history, and model settings are retained.
+
 The root slot composes the sidebar, main content, and right column. The sidebar spans 208–420px, defaults to 224px, and retains a 56px rail when collapsed; below 1024px it collapses automatically, and opening the right panel collapses a manually expanded sidebar. The right panel first opens at 45% of the viewport, then retains the user's pixel preference, capped at 70%. To protect 400px for the center, the frame first reduces the right panel to 300px, then reports insufficient room so its occupant closes it, and only then compresses the center further. Dragging has no transition delay; the right handle is absent while closed or fullscreen.
 
 Global panels occupy the root-scoped `main` keyed slot; `conversation` is the reserved key for the Conversation. `ctx.layout.selectPanel(id)` selects a registered panel, and `null` selects the Conversation without changing the current Session. The Plugins page contributes one of the shipped global panels.

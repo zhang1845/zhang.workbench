@@ -502,6 +502,15 @@
 - id: skill-filesystem
   disabled: true
 
+- insert:
+    - id: workbench-product-skills
+      name: '@deepseek-ai/dsh-skill-filesystem'
+      config:
+        providerName: workbench-product-skills
+        includeDefaultRoots: false
+        watch: false
+        bundledSkillDir: !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('@deepseek-ai/dsh-web-app/package.json')), 'skills')
+
 - id: tool-skill
   disabled: true
 

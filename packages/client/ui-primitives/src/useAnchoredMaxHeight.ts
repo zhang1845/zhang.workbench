@@ -1,8 +1,8 @@
 /**
  * Viewport-fit hook for bottom-anchored overlays (slash menu, popupSelect):
  * the element's bottom edge is laid out independent of its height, so it
- * grows upward and only the top edge can collide with the viewport — clamp
- * the design cap to the space between that edge and the viewport top.
+ * grows upward and only the top edge can collide with the viewport or a
+ * clipping ancestor — clamp the design cap to the visible space above it.
  */
 import { useLayoutEffect, useState } from 'react'
 import type { RefObject } from 'react'
@@ -15,7 +15,7 @@ import { overlayTopMargin } from './overlay-top-margin.ts'
 const MARGIN = 12
 
 /**
- * Clamp a bottom-anchored overlay's max-height to the viewport.
+ * Clamp a bottom-anchored overlay's max-height to the viewport and clipping ancestors.
  * @param ref - the overlay element; a null current (overlay closed) skips measuring.
  * @param cap - design max-height in px (the clamp never exceeds it).
  * @param signal - re-measure trigger: pass the overlay's render state so anchor
@@ -31,7 +31,13 @@ export function useAnchoredMaxHeight(ref: RefObject<HTMLElement>, cap: number, s
     const el = ref.current
     if (el === null) return
     const fit = () => {
-      setMaxHeight(Math.min(cap, Math.max(0, el.getBoundingClientRect().bottom - overlayTopMargin(margin))))
+      let top = overlayTopMargin(margin)
+      for (let parent = el.parentElement; parent !== null; parent = parent.parentElement) {
+        if (/^(hidden|clip|auto|scroll|overlay)$/u.test(getComputedStyle(parent).overflowY)) {
+          top = Math.max(top, parent.getBoundingClientRect().top + parent.clientTop + MARGIN)
+        }
+      }
+      setMaxHeight(Math.min(cap, Math.max(0, el.getBoundingClientRect().bottom - top)))
     }
     fit()
     window.addEventListener('resize', fit)

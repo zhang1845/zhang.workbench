@@ -59,6 +59,10 @@ dsh --profile web --no-open --port 8080
 
 本地文档工作台支持不超过 2 MB 的 Markdown 与纯文本文件。其 `/aipm/` 路由要求 loopback 来源连接、loopback Host 与受认可的本地 origin。写入预览不等于保存，确认时会在写入前检查文档版本。取消保留文件，冲突修改需要重新预览。项目变更拒绝符号链接及项目根目录之外的路径。这些仅限本地使用的路由不提供公开文档服务。
 
+本组合包的 `skills/` 目录包含从 [Simin-Lab](https://github.com/chusimin/Simin-Lab) 适配的十个 AI 产品经理工作流、参考材料及可选的立项报告 HTML 模板；[复制的 MIT 许可](skills/LICENSE)保留原作者署名。`workbench-product-skills` 主机提供方把此目录作为随包技能根加载，不扫描用户或项目目录。标准、PTC 和 Cordis 对话通过原有加载器与斜杠选择器展示这些技能，项目在源码目录之外也可使用。项目和用户技能保留覆盖优先级。最简预设没有技能加载器。模型目录只包含名称和说明，完整指令按需加载。适配要求项目文档默认采用 Markdown、沿用修改审阅、仅在明确要求时导出 HTML；不导入原作者个人的输出偏好或示例项目。
+
+同一提供方还加载 `agent-blueprint` 和 `ai-product-starter`，随包工作台工作流共十二个。输入 `/agent-blueprint` 可做 Agent 架构、组件选型、带证据的差距检查或迭代计划；输入 `/ai-product-starter` 可做 PRD 体检、技术适配、分阶段 MVP/前端交付及部署准备。两者包含专用参考材料及原 MIT 许可（[Agent Blueprint](skills/agent-blueprint/LICENSE)、[AI Product Starter Kit](skills/ai-product-starter/LICENSE)）。它们是方法适配，不是原引擎或运行时安装：使用当前模型、保留既有技术栈与提供商、不增加部署权限。文档项目通过审阅提交根目录内独立的 Markdown/文本；不能执行代码时交付方案与交接清单，不声称已经实现或验证。
+
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-app)列出了本运行时插件接受的字段及其 JSDoc。随发行版交付的组合插入 `schedule` 服务行与 `ui-schedule` 任务页面行，时钟读数与四个提醒工具则属于 `standard`、`cordis` 与 `ptc` 三个 preset。这三个 preset 的 `tool-subagent` 与 `tool-subagent-fork` 两行都 deny 这四个工具，因此被委派子 agent 的作用域不会列出它们。
 
 <a id="public-deployments"></a>
