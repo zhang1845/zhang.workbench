@@ -65,6 +65,8 @@ dsh --profile web --no-open --port 8080
 
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-app)列出了本运行时插件接受的字段及其 JSDoc。随发行版交付的组合插入 `schedule` 服务行与 `ui-schedule` 任务页面行，时钟读数与四个提醒工具则属于 `standard`、`cordis` 与 `ptc` 三个 preset。这三个 preset 的 `tool-subagent` 与 `tool-subagent-fork` 两行都 deny 这四个工具，因此被委派子 agent 的作用域不会列出它们。
 
+Windows 下项目和文档名称会在访问磁盘前拒绝设备保留名、文件名禁用字符及末尾句点；macOS 名称沿用原有规则。读取会显式拒绝符号链接并核对打开后的文件标识，也覆盖不支持 `O_NOFOLLOW` 的宿主系统。Windows 命名规则依据 [Microsoft 文件命名参考](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file)。
+
 <a id="public-deployments"></a>
 ### 监听、信任与公开部署
 

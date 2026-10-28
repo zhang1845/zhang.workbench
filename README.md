@@ -28,6 +28,14 @@ pnpm dsh web
 
 API Keys are configured inside the app and can be added later. Never commit keys, `.env`, `.dsh-home`, personal workspaces, or session data. V0.1 publishes source code; the existing local development App is not a portable installer. The package versions below belong to the upstream framework, independently of this edition's `V0.1` release tag.
 
+### Windows source launcher
+
+For native Windows 10/11 x64, install a supported x64 Node.js and pnpm 11.7.0, then run `pnpm install` in a fresh Windows checkout. Do not copy macOS `node_modules`, `.app` bundles, or prepared runtimes. Enable Windows Developer Mode if local dependency links require it; the launcher does not change system permissions. Keep the source in a writable local directory and retain the repository's normal native-build prerequisites.
+
+Double-click [start-workbench.cmd](start-workbench.cmd) to request a build and open the Desktop workbench. It resolves the source relative to the launcher, runs the existing Electron binary installer and Desktop development entry, and keeps the `zhang.workbench` client title. First use requires network access for dependencies and runtime downloads. Settings default to the checkout's ignored `.dsh-home/`, browser data to `.dsh-home/desktop-user-data/`, and documents to `projects/`; explicit data-directory environment variables are retained. Keep these directories when moving the checkout. API keys use the existing in-app setup rather than the launcher.
+
+From a terminal, `start-workbench.cmd --check` checks the host, Node.js range, and local pnpm entry without building or downloading. `--web` selects the existing Web development entry; `--skip-build` uses existing artifacts only and requires a previous build made with the same workbench title. These launch plans have host-independent tests, but native Windows launch, caption controls, runtime downloads, and installer creation still require Windows-machine acceptance. This change does not produce a signed or unsigned `.exe`; upstream Windows packaging requires a Windows x64 build host and its separate release configuration.
+
 ## Upstream framework
 
 DeepSeek Harness (`dsh`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).

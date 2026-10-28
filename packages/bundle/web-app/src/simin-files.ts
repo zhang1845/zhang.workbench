@@ -25,12 +25,15 @@ export interface SiminDocument { markdown: string; version: string }
 /**
  * Validate one visible project or document name.
  * @param value - one path component.
+ * @param platform - Operating system that will resolve the component.
  * @returns the trimmed, validated name.
  */
-export function siminSegment(value: unknown): string {
+export function siminSegment(value: unknown, platform: NodeJS.Platform = process.platform): string {
   if (typeof value !== 'string') throw new SiminFileError('invalidName')
   const name = value.trim()
   if (!name || name.length > 120 || name.startsWith('.') || /[\\/\x00-\x1f:]/u.test(name)) throw new SiminFileError('invalidName')
+  if (platform === 'win32' && (/[<>"|?*]/u.test(name) || name.endsWith('.')
+    || /^(?:con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])(?:[ .]|$)/iu.test(name))) throw new SiminFileError('invalidName')
   return name
 }
 /**
@@ -53,10 +56,12 @@ function documentName(value: unknown): string {
 function missing(error: unknown): boolean { return error instanceof Error && 'code' in error && error.code === 'ENOENT' }
 function exists(error: unknown): boolean { return error instanceof Error && 'code' in error && error.code === 'EEXIST' }
 async function regularText(path: string): Promise<string> {
+  const before = await lstat(path)
+  if (!before.isFile() || before.isSymbolicLink()) throw new SiminFileError('unsupportedFile')
   const file = await open(path, constants.O_RDONLY | constants.O_NOFOLLOW)
   try {
     const info = await file.stat()
-    if (!info.isFile() || info.size > 2_000_000) throw new SiminFileError('unsupportedFile')
+    if (!info.isFile() || info.size > 2_000_000 || info.dev !== before.dev || info.ino !== before.ino) throw new SiminFileError('unsupportedFile')
     const text = await file.readFile('utf8')
     if (text.includes('\0')) throw new SiminFileError('unsupportedFile')
     return text

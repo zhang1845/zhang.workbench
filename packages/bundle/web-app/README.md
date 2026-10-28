@@ -65,6 +65,8 @@ The same provider also loads `agent-blueprint` and `ai-product-starter`, bringin
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-app) lists this runtime plugin's accepted fields and their JSDoc. The shipped composition inserts the `schedule` service row and the `ui-schedule` task page row, while the clock reading and the four reminder tools belong to the `standard`, `cordis`, and `ptc` presets. The `tool-subagent` and `tool-subagent-fork` rows in those presets deny the four tools, so a delegated child's scope never lists them.
 
+On Windows, project and document names reject reserved device names, forbidden filename characters, and trailing periods before accessing disk; macOS names retain their existing rules. Reads reject symbolic links explicitly and check the opened file's identity, including on hosts without `O_NOFOLLOW`. The Windows naming rules follow [Microsoft's file naming reference](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file).
+
 <a id="public-deployments"></a>
 ### Listening, trust, and public deployments
 

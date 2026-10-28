@@ -28,6 +28,14 @@ pnpm dsh web
 
 API Key 在应用内配置，也可稍后添加。不要提交密钥、`.env`、`.dsh-home`、个人工作区或会话数据。V0.1 发布源码，已有的本地开发 App 不是便携安装包。下方软件包版本属于上游框架，与本定制版的 `V0.1` 发布标签分别管理。
 
+### Windows 源码启动入口
+
+面向原生 Windows 10/11 x64，先安装受支持的 x64 Node.js 和 pnpm 11.7.0，再在 Windows 的全新源码目录运行 `pnpm install`。不要复制 macOS 的 `node_modules`、`.app` 或已准备的运行时。依赖链接需要时启用 Windows 开发者模式；启动器不会修改系统权限。源码放在可写的本地目录，并满足仓库已有的原生构建前提。
+
+双击 [start-workbench.cmd](start-workbench.cmd) 请求构建并打开桌面工作台。它按启动器位置解析源码目录，调用已有 Electron 二进制安装器及桌面开发入口，保留 `zhang.workbench` 客户端标题。首次运行需要联网下载依赖和运行时。设置默认保存在源码下已忽略的 `.dsh-home/`，浏览器数据在 `.dsh-home/desktop-user-data/`，文档在 `projects/`；已明确配置的数据目录环境变量继续有效。移动源码时保留这些目录。API Key 仍通过应用内现有入口设置，不由启动器填写。
+
+终端运行 `start-workbench.cmd --check` 可检查宿主系统、Node.js 版本范围和本地 pnpm 入口，不构建或下载。`--web` 选择已有网页开发入口；`--skip-build` 只用已有产物，须先以相同工作台标题完成构建。启动计划已有不依赖宿主系统的测试，但 Windows 原生启动、标题栏按钮、运行时下载和安装包生成仍须 Windows 实机验收。本次不生成已签名或未签名 `.exe`；上游 Windows 打包需要 Windows x64 构建机及独立的发布配置。
+
 ## 上游框架
 
 DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的开源 agent harness（智能体框架）。

@@ -13,6 +13,12 @@
   z-index: 20;
 }
 .rightbarFloat[hidden] { display: none; }
+:global([data-windows-titlebar]) .rightbarFloat {
+  top: var(--dsh-windows-titlebar-height);
+}
+:global([data-windows-titlebar][data-fullscreen]) .rightbarFloat {
+  top: 0;
+}
 .legacyFrame { height: 100%; position: relative; }
 .returnWorkbench {
   position: absolute; top: calc(12px + var(--dsh-frame-top-clearance, 0px)); left: 50%; z-index: 30;

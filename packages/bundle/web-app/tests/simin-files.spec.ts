@@ -3,7 +3,7 @@ import { mkdtemp, readdir, writeFile, symlink, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { SiminFiles, siminVersion } from '../src/simin-files.ts'
+import { SiminFiles, siminSegment, siminVersion } from '../src/simin-files.ts'
 import { SiminProposals } from '../src/simin-proposals.ts'
 
 let root: string
@@ -12,6 +12,16 @@ beforeEach(async () => { root = await mkdtemp(join(tmpdir(), 'simin-files-')); f
 afterEach(async () => { await rm(root, { recursive: true, force: true }) })
 
 describe('Simin project files', () => {
+  it.each(['CON', 'con.md', 'NUL.txt', 'PRN', 'AUX.md', 'COM1.md', 'LPT9.txt', 'COM¹.md', 'LPT².txt', 'name.', 'a?.md', 'a*.txt', 'a|b', 'a<b', 'a>b', 'a"b'])('rejects Windows-incompatible name %s before filesystem access', (name) => {
+    expect(() => siminSegment(name, 'win32')).toThrowError(expect.objectContaining({ code: 'invalidName' }))
+  })
+  it.each(['产品 工作台', '需求.v1.md', 'COM10.md', 'console.md', '项目（初稿）', '会议纪要.txt'])('preserves supported Windows names: %s', (name) => {
+    expect(siminSegment(name, 'win32')).toBe(name)
+  })
+  it('does not reinterpret existing macOS names as Windows device paths', () => {
+    expect(siminSegment('CON.md', 'darwin')).toBe('CON.md')
+    expect(siminSegment('方案?.md', 'darwin')).toBe('方案?.md')
+  })
   it('creates an actually empty project and refuses a duplicate', async () => {
     const project = await files.create('需求梳理')
     expect(await readdir(project.path)).toEqual([])

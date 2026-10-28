@@ -161,6 +161,10 @@ Real-API tests/demos read `DEEPSEEK_API_KEY`, optional `DEEPSEEK_BASE_URL`, and 
 - TODO markers: `FIXME`/`TODO`/`XXX` by urgency ([semantics](docs/development.md)).
 - Files end with exactly one trailing newline; `git diff --cached --check` (pre-commit) gates it.
 
+## zhang.workbench platform support
+
+Every workbench feature update must preserve macOS and Windows x64 compatibility and existing data. Check affected paths, filenames, launchers, shortcuts, window chrome, and native dependencies; add focused tests. Mark Windows-native launch/packaging unverified until tested on Windows. Follow [Windows setup](README.md#windows-source-launcher).
+
 ## Defensive patterns
 
 Read [docs/defensive-patterns.md](docs/defensive-patterns.md) before lifecycle, concurrency, subprocess, or teardown work.
