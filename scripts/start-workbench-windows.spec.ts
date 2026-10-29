@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 import { windowsWorkbenchPlan } from './start-workbench-windows.mjs'
 
-const input = { root: 'D:\\我的文稿\\AI Workbench', platform: 'win32', arch: 'x64', nodeVersion: '24.0.0', environment: {} }
+const input = { root: 'D:\\我的文稿\\AI Workbench', platform: 'win32', arch: 'x64', nodeVersion: '24.9.0', environment: {} }
 
 describe('Windows workbench source launcher', () => {
   it('keeps Chinese and spaces in one working-directory argument and uses existing Desktop launch scripts', () => {
@@ -34,10 +34,10 @@ describe('Windows workbench source launcher', () => {
     expect(windowsWorkbenchPlan({ ...input, web: true, skipBuild: true }).commands).toEqual([['run', 'start:web']])
     expect(windowsWorkbenchPlan({ ...input, skipBuild: true }).commands.at(-1)).toEqual(['run', 'start:desktop'])
   })
-  it.each(['22.19.0', '22.22.0', '24.0.0', '25.0.0'])('accepts the repository Node.js range: %s', (nodeVersion) => {
+  it.each(['24.9.0', '24.14.0', '25.0.0', '26.0.0'])('accepts the repository Node.js range: %s', (nodeVersion) => {
     expect(() => windowsWorkbenchPlan({ ...input, nodeVersion })).not.toThrow()
   })
-  it.each(['20.19.0', '22.18.9', '23.10.0', 'invalid'])('refuses unsupported Node.js %s before launching', (nodeVersion) => {
+  it.each(['20.19.0', '22.19.0', '24.8.9', 'invalid'])('refuses unsupported Node.js %s before launching', (nodeVersion) => {
     expect(() => windowsWorkbenchPlan({ ...input, nodeVersion })).toThrow('Node.js')
   })
   it.each([['darwin', 'arm64'], ['linux', 'x64'], ['win32', 'arm64'], ['win32', 'ia32']])('does not run Windows x64 setup on %s/%s', (platform, arch) => {

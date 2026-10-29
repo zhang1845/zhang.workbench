@@ -46,11 +46,11 @@ describe('macOS workbench source launcher', () => {
     expect(sourceWorkbenchPlan({ ...input, skipBuild: true }).commands.at(-1)).toEqual(['run', 'start:desktop'])
   })
 
-  it.each(['22.19.0', '22.22.0', '24.0.0', '26.0.0'])('accepts supported Node.js %s', (nodeVersion) => {
+  it.each(['24.9.0', '24.14.0', '25.0.0', '26.0.0'])('accepts supported Node.js %s', (nodeVersion) => {
     expect(() => sourceWorkbenchPlan({ ...input, nodeVersion })).not.toThrow()
   })
 
-  it.each(['20.19.0', '22.18.9', '23.10.0', 'invalid'])('rejects unsupported Node.js %s before launching', (nodeVersion) => {
+  it.each(['20.19.0', '22.19.0', '24.8.9', 'invalid'])('rejects unsupported Node.js %s before launching', (nodeVersion) => {
     expect(() => sourceWorkbenchPlan({ ...input, nodeVersion })).toThrow('Node.js')
   })
 

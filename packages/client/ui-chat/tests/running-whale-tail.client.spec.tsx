@@ -21,7 +21,7 @@ describe('RunningWhaleTail', () => {
   it('limits the pulse to users without reduced motion or forced colors', () => {
     const css = readFileSync(resolve(import.meta.dirname, '../src/client/chat/ChatView.module.css'), 'utf8')
     expect(css).toContain('@media (prefers-reduced-motion: no-preference) and (forced-colors: none)')
-    expect(css).toContain('animation: running-brand-pulse 1.6s ease-in-out infinite')
+    expect(css).toContain('animation: brand-running-pulse 1.6s ease-in-out infinite')
     expect(css).not.toContain('running-whale@2x.png')
   })
 })

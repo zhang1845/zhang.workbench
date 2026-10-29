@@ -16,7 +16,7 @@
 
 ## 从源码运行本版本
 
-需要 Node.js 22.19+ 或 24+ 以及 pnpm 11.7.0。克隆本仓库，安装依赖、构建，再启动本地网页界面：
+需要 Node.js 24.9+ 以及 pnpm 11.28.5。更新旧源码时先看 [Node.js 升级说明](docs/upgrade-guide/v0.2.1-rc.2/node-24/guide.zh.md)。克隆本仓库，安装依赖、构建，再启动本地网页界面：
 
 ```sh
 git clone https://github.com/zhang1845/zhang.workbench.git
@@ -38,7 +38,7 @@ Mac 桌面启动沿用已有开发数据位置：设置保存在 `apps/desktop/.
 
 ### Windows 源码启动入口
 
-面向原生 Windows 10/11 x64，先安装受支持的 x64 Node.js 和 pnpm 11.7.0，再在 Windows 的全新源码目录运行 `pnpm install`。不要复制 macOS 的 `node_modules`、`.app` 或已准备的运行时。依赖链接需要时启用 Windows 开发者模式；启动器不会修改系统权限。源码放在可写的本地目录，并满足仓库已有的原生构建前提。
+面向原生 Windows 10/11 x64，先安装受支持的 x64 Node.js 和 pnpm 11.28.5，再在 Windows 的全新源码目录运行 `pnpm install`。不要复制 macOS 的 `node_modules`、`.app` 或已准备的运行时。依赖链接需要时启用 Windows 开发者模式；启动器不会修改系统权限。源码放在可写的本地目录，并满足仓库已有的原生构建前提。
 
 双击 [start-workbench.cmd](start-workbench.cmd) 请求构建并打开桌面工作台。它按启动器位置解析源码目录，调用已有 Electron 二进制安装器及桌面开发入口，保留 `zhang.workbench` 客户端标题。首次运行需要联网下载依赖和运行时。设置默认保存在源码下已忽略的 `.dsh-home/`，浏览器数据在 `.dsh-home/desktop-user-data/`，文档在 `projects/`；已明确配置的数据目录环境变量继续有效。移动源码时保留这些目录。API Key 仍通过应用内现有入口设置，不由启动器填写。
 

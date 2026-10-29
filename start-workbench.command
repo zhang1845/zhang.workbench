@@ -3,7 +3,7 @@
 export PATH="$PATH:/opt/homebrew/bin:/usr/local/bin"
 workbench_root="$(cd -- "$(dirname "$0")" && pwd -P)" || exit 1
 if ! command -v node >/dev/null 2>&1; then
-  printf '%s\n' 'Node.js is required. Install Node.js 22.19+ or 24+, then try again.'
+  printf '%s\n' 'Node.js is required. Install Node.js 24.9+, then try again.'
   if [[ -t 0 ]]; then read -r '?Press Return to close.'; fi
   exit 1
 fi

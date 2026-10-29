@@ -30,8 +30,10 @@ it('composes the real folder page, hides conversation on startup, and searches r
     runtime.slots.installLocale(locale)
     await runtime.sessions.add({ id: 's1' as SessionId, summary: { title: 'Blank', displayTitle: 'Blank', blank: true, cwd: '/local/AI.pm' } })
     runtime.sessions.stubCreate(async () => 's1' as SessionId)
+    const createdAt = '2026-01-01T00:00:00Z'
+    const updatedAt = '2026-01-02T00:00:00Z'
     await runtime.workspaces.update((draft) => {
-      draft.items = [{ workspaceId: 'w1' as WorkspaceId, title: 'AI.pm', path: '/local/AI.pm', sessionIds: ['s1' as SessionId], createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-02T00:00:00Z' }]
+      draft.items = [{ workspaceId: 'w1' as WorkspaceId, title: 'AI.pm', path: '/local/AI.pm', sessionIds: ['s1' as SessionId], createdAt, updatedAt }]
     })
     function Frame({ usePanelInfo, renderSlot }: PropsRuntime<'root'> & PropsRenderSlots<'main' | 'sidebar'>) {
       const panel = usePanelInfo(info => info.activePanelId)
@@ -75,7 +77,7 @@ it('composes the real folder page, hides conversation on startup, and searches r
     fireEvent.mouseEnter(dock)
     expect(view.getByRole('region', { name: '累计 Token 用量' }).textContent).toContain('暂无统计')
     expect(runtime.sessions.calls.some(call => call.method === 'refreshProjections')).toBe(true)
-    expect(view.container.querySelector('[data-testid="workbench"]')?.textContent?.replace(/\s+/g, ' ').trim()).toMatchInlineSnapshot('"工作台首页 / 工作区我的工作区选择一个文件夹，开始你的 AI 工作添加工作区手动排序AI.pm1 个会话点击进入工作区文件夹信息工作区1会话1累计 Token 用量暂无统计输入（含缓存）—输出—已统计 0/1 个会话，当前为已知用量属性工作区名称AI.pm创建时间1/1/2026最近更新1/2/2026仅在本机使用"')
+    expect(view.container.querySelector('[data-testid="workbench"]')?.textContent?.replace(/\s+/g, ' ').trim()).toBe(`工作台首页 / 工作区我的工作区选择一个文件夹，开始你的 AI 工作添加工作区手动排序AI.pm1 个会话点击进入工作区文件夹信息工作区1会话1累计 Token 用量暂无统计输入（含缓存）—输出—已统计 0/1 个会话，当前为已知用量属性工作区名称AI.pm创建时间${new Date(createdAt).toLocaleDateString()}最近更新${new Date(updatedAt).toLocaleDateString()}仅在本机使用`)
     fireEvent.change(view.getByRole('textbox', { name: '搜索文件夹' }), { target: { value: 'missing' } })
     expect(view.queryByRole('button', { name: '打开文件夹 AI.pm' })).toBeNull()
     expect(view.getByText('无匹配结果')).toBeTruthy()

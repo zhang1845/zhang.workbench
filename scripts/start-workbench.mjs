@@ -16,7 +16,7 @@ export function sourceWorkbenchPlan({ root, platform, arch, nodeVersion, environ
     throw new Error('This launcher requires macOS (Apple Silicon or Intel) or Windows x64.')
   }
   const [major, minor] = nodeVersion.split('.').map(Number)
-  if (!(major >= 24 || (major === 22 && minor >= 19))) throw new Error('Install Node.js 22.19+ (22.x) or 24+ before starting the workbench.')
+  if (!(major > 24 || (major === 24 && minor >= 9))) throw new Error('Install Node.js 24.9+ before starting the workbench.')
   const paths = windows ? win32 : posix
   if (!paths.isAbsolute(root)) throw new Error('Workbench source directory must be absolute.')
   const base = paths.normalize(root)
@@ -79,7 +79,7 @@ export async function launchSourceWorkbench(root) {
   const plan = sourceWorkbenchPlan({ root, platform: process.platform, arch: process.arch,
     nodeVersion: process.versions.node, environment: process.env, web: values.web, skipBuild: values['skip-build'] })
   const pnpm = resolve(root, 'node_modules/pnpm/bin/pnpm.cjs')
-  if (!existsSync(pnpm)) throw new Error('Dependencies are missing. Install pnpm 11.7.0, then run pnpm install in the source directory.')
+  if (!existsSync(pnpm)) throw new Error('Dependencies are missing. Install pnpm 11.28.5, then run pnpm install in the source directory.')
   if (values.check) {
     console.log(`Source launcher checks passed (${process.platform}/${process.arch}). No build, download, or application launch was performed.`)
     return

@@ -16,7 +16,7 @@ Two additional workflows, `/agent-blueprint` and `/ai-product-starter`, adapt th
 
 ## Run this edition from source
 
-Requires Node.js 22.19+ or 24+ and pnpm 11.7.0. Clone this repository, install dependencies, build, and launch the local Web UI:
+Requires Node.js 24.9+ and pnpm 11.28.5. See the [Node.js upgrade guide](docs/upgrade-guide/v0.2.1-rc.2/node-24/guide.md) when updating an older checkout. Clone this repository, install dependencies, build, and launch the local Web UI:
 
 ```sh
 git clone https://github.com/zhang1845/zhang.workbench.git
@@ -38,7 +38,7 @@ The Mac Desktop launch retains the existing development data locations: settings
 
 ### Windows source launcher
 
-For native Windows 10/11 x64, install a supported x64 Node.js and pnpm 11.7.0, then run `pnpm install` in a fresh Windows checkout. Do not copy macOS `node_modules`, `.app` bundles, or prepared runtimes. Enable Windows Developer Mode if local dependency links require it; the launcher does not change system permissions. Keep the source in a writable local directory and retain the repository's normal native-build prerequisites.
+For native Windows 10/11 x64, install a supported x64 Node.js and pnpm 11.28.5, then run `pnpm install` in a fresh Windows checkout. Do not copy macOS `node_modules`, `.app` bundles, or prepared runtimes. Enable Windows Developer Mode if local dependency links require it; the launcher does not change system permissions. Keep the source in a writable local directory and retain the repository's normal native-build prerequisites.
 
 Double-click [start-workbench.cmd](start-workbench.cmd) to request a build and open the Desktop workbench. It resolves the source relative to the launcher, runs the existing Electron binary installer and Desktop development entry, and keeps the `zhang.workbench` client title. First use requires network access for dependencies and runtime downloads. Settings default to the checkout's ignored `.dsh-home/`, browser data to `.dsh-home/desktop-user-data/`, and documents to `projects/`; explicit data-directory environment variables are retained. Keep these directories when moving the checkout. API keys use the existing in-app setup rather than the launcher.
 

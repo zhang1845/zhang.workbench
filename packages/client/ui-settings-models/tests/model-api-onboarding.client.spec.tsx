@@ -21,6 +21,7 @@ function fixture(patch: Partial<ModelsSettingsState> = {}, copy = en) {
     operations: {} as never, schema: {} as never, t: key => copy[key],
     renderSlot: unused, useSessions: unused, useSessionStatus: unused, useSessionRetainInfo: unused,
     useWorkspaces: unused, usePanelInfo: unused, useResource: unused,
+    useRemoteAccess: unused, useSessionAccess: unused, useWorkspaceAccess: unused,
   }
   return { props, complete, openSection, load }
 }

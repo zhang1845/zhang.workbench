@@ -2,7 +2,7 @@
 setlocal DisableDelayedExpansion
 where node >nul 2>nul
 if errorlevel 1 (
-  echo Node.js is required. Install Node.js 22.19+ or 24+, then try again.
+  echo Node.js is required. Install Node.js 24.9+, then try again.
   pause
   exit /b 1
 )

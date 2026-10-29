@@ -8,7 +8,8 @@
 .cardTitle { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; line-height: 1.4; }
 .cardTitle svg { flex: none; }
 .cardDescription { font-size: 12px; line-height: 1.5; color: var(--dsw-alias-label-secondary); }
-.shortcuts button:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); }
+@media (hover: hover) {
+.shortcuts button:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); } }
 .shortcuts button:focus-visible { outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); outline-offset: 3px; }
 .shortcuts button:disabled { opacity: .55; cursor: default; }
 @container (max-width: 620px) { .orb { width: 72px; height: 72px; margin-bottom: 16px; } .greeting { font-size: 18px; } .root h1 { font-size: 24px; } .shortcuts { gap: 8px; } .shortcuts button { padding: 12px; } .cardTitle { align-items: flex-start; } }

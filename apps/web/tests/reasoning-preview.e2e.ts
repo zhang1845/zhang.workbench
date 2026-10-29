@@ -12,7 +12,6 @@ import { connectFreshWorkspace, expandOwningTurnProcess, newEnglishPage, writeCo
 const SUMMARY = `Next paragraph: ${'inspect the loaded context and pending tools '.repeat(8).trim()}`
 const DELTAS = ['First paragraph', `\nDetails\n\n\n${SUMMARY}`, '\nMore detail']
 const UI_EXPECTED = fileURLToPath(new URL('./expected/reasoning-preview/running.expected.md', import.meta.url))
-
 class PausedReasoningAdapter extends LlmAdapter {
   override async listModels(provider: string) { return [{ provider, id: 'paused', name: `${provider}/paused` }] }
   readonly stages = DELTAS.map(text => ({
@@ -52,6 +51,13 @@ it('shows completed paragraph first lines across blank lines with a right-edge f
       const page = await newEnglishPage(browser)
       const console = watchConsole(page)
       await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
+      if (['zhang.workbench', 'AI.pm工作台'].includes(process.env.DSH_CLIENT_TITLE ?? '')) {
+        await page.getByRole('navigation', { name: 'Workbench', exact: true })
+          .getByRole('button', { name: 'Settings', exact: true }).click()
+        await page.getByRole('button', { name: 'Existing workspaces and sessions', exact: true }).click()
+        await page.getByRole('textbox', { name: 'Search folders', exact: true }).fill('workspace')
+        await expect.poll(() => page.getByRole('button', { name: 'Add workspace', exact: true }).count()).toBe(1)
+      }
       await connectFreshWorkspace(page, scaffold.workspaceCwd)
       await page.setViewportSize({ width: 480, height: 1000 })
       const input = page.locator('[data-composer-input]').first()
@@ -71,8 +77,13 @@ it('shows completed paragraph first lines across blank lines with a right-edge f
       expect(await whale.locator('animate').count()).toBe(0)
       try {
         await page.emulateMedia({ reducedMotion: 'no-preference', forcedColors: 'none' })
-        await expect.poll(() => mark.evaluate(element => getComputedStyle(element).animationName)).toBe('running-brand-pulse')
+        await expect.poll(() => mark.evaluate(element => getComputedStyle(element).animationName))
+          .toMatch(/^(?:[\w-]+_)?brand-running-pulse$/u)
         expect(await mark.locator('image').getAttribute('href')).toContain('data:image/svg+xml,')
+        const firstWhaleFrame = await whale.screenshot({ animations: 'allow' })
+        await expect.poll(async () => !(await whale.screenshot({ animations: 'allow' })).equals(firstWhaleFrame), {
+          timeout: 5000,
+        }).toBe(true)
         await page.emulateMedia({ reducedMotion: 'reduce' })
         await expect.poll(() => mark.evaluate(element => getComputedStyle(element).animationName)).toBe('none')
         await page.emulateMedia({ reducedMotion: 'no-preference', forcedColors: 'active' })
