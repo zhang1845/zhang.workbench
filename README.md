@@ -12,7 +12,7 @@ Projects use the checkout's ignored `projects/` directory by default. Existing w
 
 The workbench bundles Simin-Lab's ten AI product-management skills with their references and MIT attribution. In a project conversation, type `/aipm-` to select a workflow, or invoke `/aipm-problem-definition` followed by your task. They cover problem definition, user research and segmentation, product teardown, competitive analysis, requirements, prioritization, journeys, project initiation, and PRD review. The skills load independently of the project directory; the minimal preset has no skill loader. Documents default to Markdown and retain preview-before-save; the initiation HTML template is available only when explicitly requested. [Bundle details](packages/bundle/web-app/README.md).
 
-Two additional workflows, `/agent-blueprint` and `/ai-product-starter`, adapt the supplied Agent Blueprint and AI Product Starter Kit projects for architecture planning, gap checks, and staged engineering delivery. They use the current conversation's model and document review, not a separate engine or automatic deployment. [Scope and licenses](packages/bundle/web-app/README.md#use-this-package).
+Two additional workflows, `/agent-blueprint` and `/ai-product-starter`, adapt the supplied Agent Blueprint and AI Product Starter Kit projects for architecture planning, gap checks, and staged engineering delivery. Open **Product Toolkit** from Home to prepare the product workflow without typing a command. They use the current conversation's model and document review, not a separate engine or automatic deployment. [Scope and licenses](packages/bundle/web-app/README.md#use-this-package).
 
 ## Run this edition from source
 
@@ -27,6 +27,14 @@ pnpm dsh web
 ```
 
 API Keys are configured inside the app and can be added later. Never commit keys, `.env`, `.dsh-home`, personal workspaces, or session data. V0.1 publishes source code; the existing local development App is not a portable installer. The package versions below belong to the upstream framework, independently of this edition's `V0.1` release tag.
+
+### macOS source launcher
+
+For an Apple Silicon or Intel Mac, install the supported Node.js and pnpm versions above, then run `pnpm install` in this checkout on the Mac. Double-click [start-workbench.command](start-workbench.command) in Finder. The entry resolves the checkout from its own location, installs the matching Electron binary through the existing installer, and requests a Desktop source rebuild before opening the workbench. Pulling an update and launching this entry therefore uses the updated Product Toolkit interface. For repeated use, create a Finder alias of this file and place the alias on the Desktop.
+
+The Mac Desktop launch retains the existing development data locations: settings in `apps/desktop/.desktop-build/development/home/` and browser data in its sibling `electron-user-data/`. Explicit `DSH_HOME` and `DSH_DESKTOP_USER_DATA_DIR` values remain effective, with relative paths resolved from the checkout. Projects stay in `projects/`. Keep these data directories when moving the source, and install dependencies on each operating system rather than copying `node_modules` between Windows and Mac.
+
+`./start-workbench.command --check` checks the native host, Node.js range, and local pnpm entry without downloading, building, or launching the application. `--web` selects the existing Web development entry and its existing home defaults. `--skip-build` explicitly reuses previous artifacts built with the same workbench title. The focused macOS workflow checks the executable entry and launcher behavior on Apple Silicon and Intel runners; interactive Finder/Electron acceptance remains a Mac-machine check. This source entry does not build an installer or update an already installed `.app`.
 
 ### Windows source launcher
 

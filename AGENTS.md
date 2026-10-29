@@ -163,7 +163,7 @@ Real-API tests/demos read `DEEPSEEK_API_KEY`, optional `DEEPSEEK_BASE_URL`, and 
 
 ## zhang.workbench platform support
 
-Every workbench feature update must preserve macOS and Windows x64 compatibility and existing data. Check affected paths, filenames, launchers, shortcuts, window chrome, and native dependencies; add focused tests. Mark Windows-native launch/packaging unverified until tested on Windows. Follow [Windows setup](README.md#windows-source-launcher).
+Preserve macOS, Windows x64, and existing data in every workbench update. Adapt desktop entries, startup, and native integrations on both platforms; check paths, filenames, shortcuts, and window chrome with focused tests. Keep native launch/packaging unverified until tested on that platform. Follow [macOS](README.md#macos-source-launcher) and [Windows setup](README.md#windows-source-launcher).
 
 ## Defensive patterns
 

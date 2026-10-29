@@ -12,7 +12,7 @@
 
 工作台随包集成了 Simin-Lab 的十个 AI 产品经理技能、配套参考材料及 MIT 署名。进入项目对话后，输入 `/aipm-` 选择工作流，或输入 `/aipm-problem-definition` 后接具体任务。技能覆盖问题定义、用户研究与分层、产品拆解、竞品分析、需求管理、优先级、用户旅程、立项和 PRD 审阅；不依赖项目目录加载，最简预设没有技能加载器。文档默认采用 Markdown，保留先审阅后保存；只有明确要求时才使用立项报告 HTML 模板。[组合包说明](packages/bundle/web-app/README.zh.md)。
 
-另有 `/agent-blueprint` 和 `/ai-product-starter` 两个工作流，从用户提供的 Agent Blueprint 与 AI Product Starter Kit 项目适配架构推导、差距检查及分阶段工程交付方法。它们使用当前对话模型与文档审阅，不安装另一套引擎，也不自动部署。[范围与许可](packages/bundle/web-app/README.zh.md#use-this-package)。
+另有 `/agent-blueprint` 和 `/ai-product-starter` 两个工作流，从用户提供的 Agent Blueprint 与 AI Product Starter Kit 项目适配架构推导、差距检查及分阶段工程交付方法。在首页点击**产品工具包**即可准备产品工作流，无需输入命令。它们使用当前对话模型与文档审阅，不安装另一套引擎，也不自动部署。[范围与许可](packages/bundle/web-app/README.zh.md#use-this-package)。
 
 ## 从源码运行本版本
 
@@ -27,6 +27,14 @@ pnpm dsh web
 ```
 
 API Key 在应用内配置，也可稍后添加。不要提交密钥、`.env`、`.dsh-home`、个人工作区或会话数据。V0.1 发布源码，已有的本地开发 App 不是便携安装包。下方软件包版本属于上游框架，与本定制版的 `V0.1` 发布标签分别管理。
+
+### macOS 源码启动入口
+
+Apple Silicon 和 Intel Mac 均使用上方要求的 Node.js 与 pnpm 版本，再在 Mac 的本仓库目录执行 `pnpm install`。在 Finder 双击 [start-workbench.command](start-workbench.command)：入口按自身位置解析源码目录，通过已有安装器安装匹配的 Electron 二进制，先请求重新构建桌面端源码，再打开工作台。因此，拉取更新后从这个入口启动会使用更新后的产品工具包界面。日常使用可在 Finder 为这个文件制作替身并放到桌面。
+
+Mac 桌面启动沿用已有开发数据位置：设置保存在 `apps/desktop/.desktop-build/development/home/`，浏览器数据保存在同级的 `electron-user-data/`。明确设置的 `DSH_HOME` 和 `DSH_DESKTOP_USER_DATA_DIR` 继续有效，相对路径按源码目录解析。项目仍在 `projects/`。移动源码时保留这些数据目录；各操作系统分别安装依赖，不在 Windows 与 Mac 之间复制 `node_modules`。
+
+`./start-workbench.command --check` 检查原生宿主、Node.js 版本范围和本地 pnpm 入口，不下载、构建或启动应用。`--web` 选择已有网页开发入口并沿用其数据目录默认值。`--skip-build` 明确复用先前以相同工作台标题构建的产物。专用 macOS 工作流在 Apple Silicon 与 Intel 运行器上检查可执行入口及启动器行为；Finder/Electron 的交互验收仍须在 Mac 实机完成。这个源码入口不生成安装包，也不会更新已经安装的 `.app`。
 
 ### Windows 源码启动入口
 

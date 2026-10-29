@@ -1,0 +1,70 @@
+name: Workbench macOS launcher
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'start-workbench.command'
+      - 'scripts/start-workbench*'
+      - 'packages/client/ui-layout/**'
+      - 'packages/bundle/web-app/**'
+      - 'apps/desktop/scripts/dev.ts'
+      - 'apps/desktop/scripts/development-app.ts'
+      - '.github/workflows/workbench-macos.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  pull_request:
+    paths:
+      - 'start-workbench.command'
+      - 'scripts/start-workbench*'
+      - 'packages/client/ui-layout/**'
+      - 'packages/bundle/web-app/**'
+      - 'apps/desktop/scripts/dev.ts'
+      - 'apps/desktop/scripts/development-app.ts'
+      - '.github/workflows/workbench-macos.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workbench-macos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  launcher:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    env:
+      DSH_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          dest: ${{ runner.temp }}/workbench-pnpm
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Validate the native double-click entry
+        run: |
+          test -x start-workbench.command
+          /bin/zsh -n start-workbench.command
+          ./start-workbench.command --check
+      - name: Verify the native Electron runtime
+        run: |
+          pnpm --filter @deepseek-ai/dsh-desktop exec install-electron
+          ELECTRON_RUN_AS_NODE=1 pnpm --filter @deepseek-ai/dsh-desktop exec electron -p 'process.platform + "/" + process.arch'
+      - name: Check native paths, process execution and Windows compatibility
+        run: pnpm exec vitest run scripts/start-workbench.spec.ts scripts/start-workbench-windows.spec.ts apps/desktop/tests/development-app.spec.ts
+      - name: Check the Product Toolkit entry and local project API
+        run: pnpm exec vitest run packages/client/ui-layout/tests/workbench-documents.client.spec.tsx packages/bundle/web-app/tests/workbench-http.spec.ts
