@@ -77,6 +77,8 @@
 .templates { display: flex; flex-direction: column; border-top: 0.5px solid var(--line); }
 .templateCard { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; gap: 20px; align-items: center; padding: 24px 16px; border: 0; border-bottom: 0.5px solid var(--line); background: transparent; color: var(--ink); text-align: left; }
 .templateCard:hover { background: var(--hover); }
+.starterCard { box-sizing: border-box; width: 100%; max-width: 756px; margin: 30px auto 0; border: 0.5px solid var(--line); border-radius: var(--dsw-radius-md); }
+.starterCard:focus-visible { outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); outline-offset: 3px; }
 .templateCopy { min-width: 0; }
 .templateCard h2 { font-size: 15px; font-weight: 500; margin: 0 0 6px; }
 .templateCard p { font-size: 11px; line-height: 1.8; color: var(--muted); margin: 0; }

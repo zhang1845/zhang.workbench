@@ -31,6 +31,8 @@ Builds titled `zhang.workbench` or `AI.pm工作台` use the document workbench: 
 
 Home project cards use silver pocket artwork with curved openings, soft highlights, and layered paper covers. Each card retains the real project name and document count. Paper lifts on hover or keyboard focus; system and workbench reduced-motion preferences keep it still.
 
+Home's Product Toolkit entry opens a project picker or a new-project form when the workbench is empty. A new project can also be selected from the picker. Starting opens the selected project's conversation with the bundled `ai-product-starter` invocation prepared as a draft; new projects retain the entered idea. The user sends the draft to begin. Opening or cancelling the entry does not create documents, and document writes retain preview and confirmation.
+
 Each workbench opening or reload starts on Home, including profiles with the former restore-progress preference enabled. Navigation remains available during the current opening; projects, documents, conversation history, and model settings are retained.
 
 The root slot composes the sidebar, main content, and right column. The sidebar spans 208–420px, defaults to 224px, and retains a 56px rail when collapsed; below 1024px it collapses automatically, and opening the right panel collapses a manually expanded sidebar. The right panel first opens at 45% of the viewport, then retains the user's pixel preference, capped at 70%. To protect 400px for the center, the frame first reduces the right panel to 300px, then reports insufficient room so its occupant closes it, and only then compresses the center further. Dragging has no transition delay; the right handle is absent while closed or fullscreen.

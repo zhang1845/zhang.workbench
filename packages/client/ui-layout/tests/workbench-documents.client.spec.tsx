@@ -4,7 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
 import { SiminShell } from '../src/client/SiminShell.tsx'
-import { siminZh } from '../src/client/simin-locales.ts'
+import { siminEn, siminZh } from '../src/client/simin-locales.ts'
 import type { SiminSnapshot } from '../src/client/simin-api.ts'
 import { loadSiminPreferences, SIMIN_CHANGE_EVENT, SIMIN_OPEN_PROJECT_EVENT } from '../src/client/simin-state.ts'
 
@@ -25,12 +25,77 @@ beforeEach(() => {
     const data = init?.body ? JSON.parse(String(init.body)) as Record<string, unknown> : undefined
     if (data) mutations.push({ path, ...data })
     if (data && mutationError) return new Response(JSON.stringify({ error: mutationError }), { status: 409 })
+    if (path === '/aipm/projects' && data) {
+      const created = { name: String(data.name), path: `/test/projects/${String(data.name)}`, documents: [], files: [] }
+      snapshot.projects.push(created)
+      return new Response(JSON.stringify(created), { status: 201, headers: { 'content-type': 'application/json' } })
+    }
     const body = path === '/aipm/state' ? snapshot : path === '/aipm/file'
       ? { markdown: '# 真实正文', version: 'v1' } : { ok: true }
     return new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json' } })
   }))
 })
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); localStorage.clear() })
+
+it('opens the starter kit from Home and prepares the selected project conversation without changing documents', async () => {
+  snapshot.projects.push({ name: '另一产品', path: '/test/projects/另一产品', documents: [], files: [] })
+  const opened = vi.fn()
+  window.addEventListener(SIMIN_OPEN_PROJECT_EVENT, opened)
+  try {
+    render(<SiminShell chat={<textarea aria-label="AI 对话" />} nativeSettings={null} t={makeTranslate(siminZh)} />)
+    fireEvent.click(await screen.findByRole('button', { name: siminZh.starterTitle }))
+    const dialog = screen.getByRole('dialog', { name: siminZh.starterTitle })
+    fireEvent.change(within(dialog).getByRole('combobox', { name: siminZh.chooseProject }), { target: { value: '另一产品' } })
+    fireEvent.click(within(dialog).getByRole('button', { name: siminZh.starterStart }))
+    await waitFor(() => expect(opened).toHaveBeenCalledOnce())
+    expect((opened.mock.calls[0]![0] as CustomEvent).detail).toEqual({ path: '/test/projects/另一产品', draft: siminZh.starterPrompt })
+    expect(mutations).toEqual([])
+    expect(screen.queryByRole('dialog')).toBeNull()
+  } finally { window.removeEventListener(SIMIN_OPEN_PROJECT_EVENT, opened) }
+})
+
+it.each([false, true])('starts the kit in a new project with its idea preserved (existing projects: %s)', async (existing) => {
+  if (!existing) snapshot.projects = []
+  const opened = vi.fn()
+  window.addEventListener(SIMIN_OPEN_PROJECT_EVENT, opened)
+  try {
+    render(<SiminShell chat={null} nativeSettings={null} t={makeTranslate(siminZh)} />)
+    fireEvent.click(await screen.findByRole('button', { name: siminZh.starterTitle }))
+    if (existing) fireEvent.click(screen.getByRole('button', { name: siminZh.starterNewProject }))
+    const dialog = screen.getByRole('dialog', { name: siminZh.starterTitle })
+    fireEvent.change(within(dialog).getByRole('textbox', { name: siminZh.projectName }), { target: { value: '我的新产品' } })
+    fireEvent.change(within(dialog).getByRole('textbox', { name: siminZh.idea }), { target: { value: '帮老师整理课程材料' } })
+    fireEvent.click(within(dialog).getByRole('button', { name: siminZh.starterStart }))
+    await waitFor(() => expect(opened).toHaveBeenCalledOnce())
+    expect((opened.mock.calls[0]![0] as CustomEvent).detail).toEqual({
+      path: '/test/projects/我的新产品', draft: `${siminZh.starterPrompt}\n\n帮老师整理课程材料`,
+    })
+    expect(mutations).toEqual([{ path: '/aipm/projects', name: '我的新产品' }])
+  } finally { window.removeEventListener(SIMIN_OPEN_PROJECT_EVENT, opened) }
+})
+
+it('keeps the starter project form and idea when project creation fails', async () => {
+  snapshot.projects = []
+  mutationError = 'duplicate'
+  render(<SiminShell chat={null} nativeSettings={null} t={makeTranslate(siminZh)} />)
+  fireEvent.click(await screen.findByRole('button', { name: siminZh.starterTitle }))
+  fireEvent.change(screen.getByRole('textbox', { name: siminZh.projectName }), { target: { value: '重名产品' } })
+  fireEvent.change(screen.getByRole('textbox', { name: siminZh.idea }), { target: { value: '保留这个想法' } })
+  fireEvent.click(screen.getByRole('button', { name: siminZh.starterStart }))
+  expect(await screen.findByRole('alert')).toHaveProperty('textContent', siminZh.duplicate)
+  expect(screen.getByRole('textbox', { name: siminZh.idea })).toHaveProperty('value', '保留这个想法')
+  expect(screen.getByRole('dialog')).toBeTruthy()
+})
+
+it.each([siminZh, siminEn])('localizes the starter entry and leaves projects untouched when cancelled', async (dictionary) => {
+  render(<SiminShell chat={null} nativeSettings={null} t={makeTranslate(dictionary)} />)
+  fireEvent.click(await screen.findByRole('button', { name: dictionary.starterTitle }))
+  expect(screen.getByRole('dialog', { name: dictionary.starterTitle })).toBeTruthy()
+  expect(screen.getByRole('combobox', { name: dictionary.chooseProject })).toBeTruthy()
+  fireEvent.click(screen.getByRole('button', { name: dictionary.cancel }))
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  expect(mutations).toEqual([])
+})
 
 async function openProject() {
   const view = render(<SiminShell chat={<textarea aria-label="AI 对话" />} nativeSettings={null} t={makeTranslate(siminZh)} />)

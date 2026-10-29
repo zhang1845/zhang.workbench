@@ -31,7 +31,7 @@ interface Dialog {
   markdown?: string
   proposal?: SiminProposal
   deleted?: SiminTrash
-  template?: 'idea' | 'facts' | 'next'
+  template?: 'idea' | 'facts' | 'next' | 'starter'
 }
 const initialSnapshot: SiminSnapshot = { root: '', projects: [], trash: [], proposals: [] }
 function plain(name: string): string { return name.replace(/\.(md|txt)$/iu, '') }
@@ -255,6 +255,9 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
     setIdeaDraft(''); setPreviewing(false); setBusy(false); setFormError('')
     setTargetProject(project?.name ?? snapshot.projects[0]?.name ?? '')
   }
+  const beginStarter = (): void => {
+    begin({ kind: snapshot.projects.length === 0 ? 'create' : 'template', template: 'starter' })
+  }
   const fileAction = async (row: FileRow, kind: 'rename' | 'trash'): Promise<void> => {
     try {
       const current = await siminDocument(row.project.name, row.name)
@@ -276,7 +279,9 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
         if (typeof data !== 'object' || data === null || !('name' in data) || !('path' in data) || typeof data.name !== 'string' || typeof data.path !== 'string') throw new Error('invalidData')
         const created: SiminProject = { name: data.name, path: data.path, documents: [], files: [] }
         setSnapshot(previousSnapshot => ({ ...previousSnapshot, projects: [...previousSnapshot.projects, created] }))
-        if (ideaDraft.trim()) draftToProject(created, ideaDraft.trim()); else openProject(created)
+        const idea = ideaDraft.trim()
+        const prompt = dialog.template === 'starter' ? `${t('starterPrompt')}${idea ? `\n\n${idea}` : ''}` : idea
+        if (prompt) draftToProject(created, prompt); else openProject(created)
       } else if (dialog.kind === 'preview' && dialog.proposal !== undefined) {
         await siminRequest('/aipm/decide', { id: dialog.proposal.id, allow: true })
       } else if (dialog.kind === 'newDoc') {
@@ -373,7 +378,7 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
       window.dispatchEvent(new CustomEvent(SIMIN_OPEN_PROJECT_EVENT, { detail: { path: target.path, sessionId: hit.sessionId } }))
     } })),
   ]
-  const dialogKey: SiminKey = dialog?.kind === 'create' ? 'create' : dialog?.kind === 'rename' ? 'rename' : dialog?.kind === 'trash' ? 'remove' : dialog?.kind === 'purge' ? 'permanent' : dialog?.kind === 'template' ? `${dialog.template ?? 'idea'}Title` : dialog?.proposal?.before ? 'diff' : dialog?.kind === 'newDoc' && !previewing ? 'newDoc' : 'preview'
+  const dialogKey: SiminKey = dialog?.template === 'starter' ? 'starterTitle' : dialog?.kind === 'create' ? 'create' : dialog?.kind === 'rename' ? 'rename' : dialog?.kind === 'trash' ? 'remove' : dialog?.kind === 'purge' ? 'permanent' : dialog?.kind === 'template' ? `${dialog.template ?? 'idea'}Title` : dialog?.proposal?.before ? 'diff' : dialog?.kind === 'newDoc' && !previewing ? 'newDoc' : 'preview'
 
   return <div className={`${css.shell} ${focus ? css.focused : ''}`} data-simin-page={page} data-reduced={prefs.reduced || undefined}>
     <nav className={css.rail} aria-label={t('home')}><span className={css.orb}><FishLogo size={26} /></span>
@@ -392,6 +397,7 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
       <div className={css.content}>
         {loading ? <div className={css.loading}><span className={css.spinner} /></div> : page === 'home' ? <div className={css.home}>
           <span className={`${css.orb} ${css.welcomeOrb}`}><Star /></span><h1>{t(new Date().getHours() < 12 ? 'morning' : 'afternoon')}<span className={css.greetingEmoji} aria-hidden="true">👋</span></h1><p>{t('welcome')}</p>
+          <button type="button" className={`${css.templateCard} ${css.starterCard}`} aria-label={t('starterTitle')} onClick={beginStarter}><span className={css.templateIcon}><IconAgentPresetOutlineRegular size={24} /></span><span className={css.templateCopy}><h2>{t('starterTitle')}</h2><p>{t('starterDescription')}</p></span><span className={`${css.templateLink} ${css.button}`}>{t('starterStart')}<IconChevronRightOutlineRegular size={13} /></span></button>
           <section className={css.homeProjects}><div className={css.projectsHeading}><span>{t('projects')} <small>{snapshot.projects.length}</small></span><span>{iconButton('grid', () => { setListView(false) }, <IconBrowseOutlineRegular size={13} />)}{iconButton('list', () => { setListView(true) }, <IconPanelLeftOutlineRegular size={13} />)}</span></div>{snapshot.projects.length === 0 ? <div className={css.firstProject}><h2>{t('noProjects')}</h2><p>{t('noProjectsHint')}</p>{button('create', () => { begin({ kind: 'create' }) }, true)}</div> : <div className={listView ? css.projectList : css.projectGrid}>{snapshot.projects.map(item => <Folder key={item.path} project={item} t={t} onOpen={() => { openProject(item) }} />)}</div>}</section>
           <div className={css.quickActions}>{button('create', () => { begin({ kind: 'create' }) }, false, <IconPlusOutlineRegular size={13} />)}{button('documents', () => { navigate('documents') }, false, <IconDeliverDocRegular size={13} />)}{button('fromTemplate', () => { navigate('templates') }, false, <IconAgentPresetOutlineRegular size={13} />)}{button('search', () => { setSearchOpen(true) }, false, <IconSearchOutlineRegular size={13} />)}</div><p className={css.homeFoot}>{t('foot')}</p>
         </div> : page === 'documents' ? <div className={css.page}><h1>{t('documents')}</h1><div className={css.filters}><select aria-label={t('projects')} value={projectFilter} onChange={(event) => { setProjectFilter(event.target.value) }}><option value="">{t('allProjects')}</option>{snapshot.projects.map(item => <option key={item.path}>{item.name}</option>)}</select><input aria-label={t('search')} placeholder={t('filterPlaceholder')} value={query} onChange={(event) => { setQuery(event.target.value) }} /></div>{fileTable(filtered)}</div> : page === 'templates' ? <div className={`${css.page} ${css.templatePage}`}><h1>{t('templateTitle')}</h1><p className={css.subtitle}>{t('templateHint')}</p><div className={css.templates}>{templateButtons}</div><p className={css.templateNotice}>{t('templateNotice')}</p></div> : page === 'trash' ? <div className={css.page}><h1>{t('trash')}</h1><p className={css.subtitle}>{t('trashHint')}</p>{snapshot.trash.length === 0 ? <div className={css.emptyState}><IconTrashOutlineRegular size={28} /><h2>{t('trashEmpty')}</h2><p>{t('trashEmptyHint')}</p></div> : <div className={css.tableWrap}><table className={css.table}><thead><tr><th>{t('filename')}</th><th>{t('originalProject')}</th><th>{t('deleted')}</th><th>{t('actions')}</th></tr></thead><tbody>{snapshot.trash.map(item => <tr key={item.id}><td><button className={css.fileName} onClick={() => { begin({ kind: 'preview', markdown: item.markdown, file: item.file }) }}>{plain(item.file)}</button></td><td>{item.project}</td><td>{date(item.deletedAt)}</td><td><div className={css.rowActions}>{button('restore', () => { void restore(item) })}{iconButton('permanent', () => { begin({ kind: 'purge', deleted: item }) }, <IconTrashOutlineRegular size={13} />)}</div></td></tr>)}</tbody></table></div>}</div> : page === 'settings' ? settingsPage : project === undefined ? <div className={css.emptyState}><h2>{t('missing')}</h2>{button('back', () => { navigate('home') })}</div> : null}
@@ -410,13 +416,13 @@ export function SiminShell({ chat, nativeSettings, t, onOpenLegacy }: {
     </main>
     <div className={css.nativeHost}>{nativeSettings}</div>
     {toast !== null && <Toast key={toast.seq} text={toast.text} onDone={() => { setToast(null) }} />}
-    <Modal open={dialog !== null} onClose={closeDialog} title={t(dialogKey)} closeLabel={t('close')} className={css.dialog ?? ''} footer={dialog?.kind === 'preview' && dialog.proposal === undefined ? button('close', closeDialog) : <>{dialog?.proposal === undefined ? button('cancel', closeDialog) : <button className={css.button} disabled={busy} onClick={() => { void reject() }}>{t('cancel')}</button>}<button className={css.primary} disabled={busy} onClick={() => { void commit() }}>{t(busy ? 'busy' : dialog?.kind === 'create' ? 'create' : dialog?.kind === 'rename' ? 'rename' : dialog?.kind === 'trash' ? 'remove' : dialog?.kind === 'purge' ? 'permanent' : dialog?.kind === 'template' ? 'useTemplate' : dialog?.kind === 'newDoc' && !previewing ? 'preview' : 'confirm')}</button></>}>
+    <Modal open={dialog !== null} onClose={closeDialog} title={t(dialogKey)} closeLabel={t('close')} className={css.dialog ?? ''} footer={dialog?.kind === 'preview' && dialog.proposal === undefined ? button('close', closeDialog) : <>{dialog?.proposal === undefined ? button('cancel', closeDialog) : <button className={css.button} disabled={busy} onClick={() => { void reject() }}>{t('cancel')}</button>}<button className={css.primary} disabled={busy} onClick={() => { void commit() }}>{t(busy ? 'busy' : dialog?.template === 'starter' ? 'starterStart' : dialog?.kind === 'create' ? 'create' : dialog?.kind === 'rename' ? 'rename' : dialog?.kind === 'trash' ? 'remove' : dialog?.kind === 'purge' ? 'permanent' : dialog?.kind === 'template' ? 'useTemplate' : dialog?.kind === 'newDoc' && !previewing ? 'preview' : 'confirm')}</button></>}>
       {dialog?.kind === 'create' && <><label className={css.field}>{t('projectName')}<input data-modal-autofocus value={nameDraft} placeholder={t('namePlaceholder')} onChange={(event) => { setNameDraft(event.target.value) }} onKeyDown={(event) => { if (event.key === 'Enter') void commit() }} /></label><label className={css.field}>{t('idea')}<textarea value={ideaDraft} placeholder={t('ideaPlaceholder')} onChange={(event) => { setIdeaDraft(event.target.value) }} /></label><p className={css.hint}>{t('createHint')}</p></>}
       {dialog?.kind === 'rename' && <><p>{t('renameHint')}</p><label className={css.field}>{t('filename')}<input data-modal-autofocus value={nameDraft} onChange={(event) => { setNameDraft(event.target.value) }} /></label></>}
       {dialog?.kind === 'trash' && <p>{dialog.file}<br />{t('removeHint')}</p>}
       {dialog?.kind === 'purge' && <p>{dialog.deleted?.file}<br />{t('permanentHint')}</p>}
       {dialog?.kind === 'newDoc' && (!previewing ? <><label className={css.field}>{t('filename')}<input data-modal-autofocus value={nameDraft} onChange={(event) => { setNameDraft(event.target.value) }} /></label><label className={css.field}>{t('content')}<textarea className={css.editor} value={bodyDraft} onChange={(event) => { setBodyDraft(event.target.value) }} /></label></> : <><h3>{nameDraft}</h3><Reading text={bodyDraft} t={t} /><p className={css.hint}>{t('proposalHint')}</p></>)}
-      {dialog?.kind === 'template' && <><Reading text={t(`${dialog.template ?? 'idea'}Prompt`)} t={t} /><label className={css.field}>{t('chooseProject')}<select data-modal-autofocus value={targetProject} onChange={(event) => { setTargetProject(event.target.value) }}>{snapshot.projects.map(item => <option key={item.path}>{item.name}</option>)}</select></label><p className={css.hint}>{t('draftHint')}</p></>}
+      {dialog?.kind === 'template' && <>{dialog.template === 'starter' ? <p>{t('starterDescription')}</p> : <Reading text={t(`${dialog.template ?? 'idea'}Prompt`)} t={t} />}<label className={css.field}>{t('chooseProject')}<select data-modal-autofocus value={targetProject} onChange={(event) => { setTargetProject(event.target.value) }}>{snapshot.projects.map(item => <option key={item.path}>{item.name}</option>)}</select></label>{dialog.template === 'starter' && button('starterNewProject', () => { begin({ kind: 'create', template: 'starter' }) })}<p className={css.hint}>{t('draftHint')}</p></>}
       {dialog?.kind === 'preview' && <><h3>{dialog.file}</h3>{dialog.proposal?.before !== null && dialog.proposal?.before !== undefined ? <DiffBlock diffs={[{ path: dialog.proposal.file, oldText: dialog.proposal.before, newText: dialog.proposal.after }]} maxLines={80} labels={{ codeLabel: t('diff'), wrapLabel: t('wrap'), unwrapLabel: t('unwrap'), copy: t('copy'), copied: t('copied'), collapseAria: t('collapse'), collapse: t('collapse'), expandAria: count => t('expand', { count }), expand: count => t('expand', { count }) }} /> : <Reading text={dialog.proposal?.after ?? dialog.markdown ?? ''} t={t} />}{dialog.proposal !== undefined && <p className={css.hint}>{t('proposalHint')}</p>}</>}
       {formError && <p className={css.formError} role="alert">{formError}</p>}
     </Modal>

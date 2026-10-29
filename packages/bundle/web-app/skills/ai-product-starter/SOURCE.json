@@ -1,0 +1,161 @@
+{
+  "repository": "https://github.com/hubooooooo/ai-product-starter-kit",
+  "revision": "ddaa7abff2f8ce0304c1db00f3466716c89292ff",
+  "license": "MIT",
+  "usage": "Reference and new-project template; scripts are not run by the workbench.",
+  "files": [
+    {
+      "path": ".gitignore.template",
+      "sha256": "80042d24468940b49962002dc431145ba64ec96b47c4f9b7fb5bb1416b3d8a90",
+      "upstreamPath": ".gitignore"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "89fd037cfd2487977cd667b97d47723b89925300ec8ccb31d5e3157b55337bcd"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "00ef62a753b438e209a1bbbb4d286bcf1323b3465f3b97e1a605dafcb0e522af"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "e7e412ad2bceb0e5b06971e6cec38d7adcb226861909c4af288863bd0ae9d91f"
+    },
+    {
+      "path": "README.md",
+      "sha256": "39673fe7a68b9e48a97da9ed9e5b5e1b1c0d00e564148288ba8b16b13cc2623b"
+    },
+    {
+      "path": "assets/logo-dark.png",
+      "sha256": "c02ab52ef3ea22175cc2744ae9024b4b7d35a82a3364314f5726f6ebfe5928a4"
+    },
+    {
+      "path": "assets/logo.png",
+      "sha256": "450679ea4ac8e64f2429850a994b46ba3d3b0769b664aee56ee517fbdb66aa12"
+    },
+    {
+      "path": "assets/spacer.png",
+      "sha256": "c2153f77e11087fcb078ae38527fa83bef29791e3700e30cc87fec4405a66d0f"
+    },
+    {
+      "path": "docs/PRD模板.md",
+      "sha256": "77fb4ebc6182fe9a43098d2a7fa6aa8318ae1d2d618c62a2bd856ae53f77d1f6"
+    },
+    {
+      "path": "docs/手册/AI产品 Vibe Coding 通用上线部署手册.md",
+      "sha256": "5dd2a6968195008dd061a52468b7305cbe044e48a3470883dd104f96c7426389"
+    },
+    {
+      "path": "docs/手册/AI产品Vibe Coding通用前端技术栈手册.md",
+      "sha256": "b89a621a5847198a41b54d11d5ef3229760382a25345ca83f72fd927d5161900"
+    },
+    {
+      "path": "docs/手册/AI产品Vibe Coding通用技术栈手册.md",
+      "sha256": "0990affc2f75ac06c0e04865c3a884add5ccc3fa6a30d08618aa743a16ec2544"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/README.md",
+      "sha256": "1a603c211424d0b9931a26b87653e46fa736456f9fec5f5225c5253351fbf117"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/.dockerignore",
+      "sha256": "2cdaa08e3beafb50ecf50015b55fa3447297f978fa974e14e07e3f754fb4e236"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/.env.example",
+      "sha256": "410d376f3a2155ce5166d3ade1e70ae20b4e52e8d683e7ace59243abac280a47"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/Dockerfile",
+      "sha256": "2ed4e28ba7c8dd071498c5dac5d5119346a3e5dbec23cb53f03aba2ac9e0b33c"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/app/api/auth.py",
+      "sha256": "b9b70c61eb3f81437bdc1125db3b385c741707aab8bdd0029c5f3fbc0876a940"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/app/services/auth.py",
+      "sha256": "cbb386c24527ed0c9e265a20061c87edddb92b383189d10e769a47c6b289c0bf"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/app/services/repository.py",
+      "sha256": "056766245ccad0aa66bee186f25bfe9e4eeacf7cbcbb6f02ae887ea913540c4b"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/app/services/rest_repository.py",
+      "sha256": "a28a351c2ae3a09b88d5d6e8fe2ffaa087154765237b4e5e5eca489663387917"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/migrations/001_init.sql",
+      "sha256": "790b676e2e24c953ddc99d82808d3482d1977aef9487e512a4ff516d37506fa2"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/backend/tests/conftest.py",
+      "sha256": "4a9a5a475807b85f647ee12ca33d81ac94e3bae0106e3002e6d17ae765b18685"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/deploy_cloudrun.py",
+      "sha256": "465f134b04c92d0a4016f9b6b61d58cce492e6a310b8f510757f02c426e66c9b"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/frontend/.dockerignore",
+      "sha256": "25c54f21e414392c98f726d64453d59cf4ac414b3814aae7b822a0aabdc365ed"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/frontend/.env.example",
+      "sha256": "9087f4993e38b8ea65b0a198ee0942b0a228b06ee8e1928a83341f07c2bb3050"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/frontend/Dockerfile",
+      "sha256": "7e2c85bcab633565c27f98552a773987da2a2e1714156dfc51239c6b48aa97a2"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/frontend/lib/proxy/forward.ts",
+      "sha256": "c587c4bd6e5d1f1f5ee1c0373445b427ded0e22178f592ce080254d5ed4f6b93"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/frontend/next.config.ts",
+      "sha256": "90077ddcf88424d047a01fc3f8a34c7c990f219d4b519f85281bbdf437623bd5"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/frontend/proxy.ts",
+      "sha256": "ef3b39e5c5ea53da7083b6deca6edd8ff863614c6a880682c79449e1b65493b1"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/save_secret_from_clipboard.py",
+      "sha256": "f4dd8aad5229a6c5bc82bf1fb81066a680e79e2a06cf891270d37ff7d6da9e05"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/set_cloudrun_env.py",
+      "sha256": "4a9bc300c39d95f36197f8bac19d422db6e9f2318fc95ed71909fb13cc3feec3"
+    },
+    {
+      "path": "docs/手册/参考代码/腾讯云开发/给产品经理的上线指引-范例.md",
+      "sha256": "02f942c530ab5958835d519c8b426863b68c0e5658ebb6c593b71955715f9d8f"
+    },
+    {
+      "path": "projects/我的第一个产品/docs/PRD/说明.md",
+      "sha256": "84da8ecfebc3bd71d8d48b025fba2cd0cf41fa36e52e171599405c12e7fe5460"
+    },
+    {
+      "path": "projects/我的第一个产品/docs/evidence/说明.md",
+      "sha256": "1599766238e7b240d1ddf2f1c044282a1f999621f5a7e2e6e7591493fed01433"
+    },
+    {
+      "path": "projects/我的第一个产品/docs/设计参考/说明.md",
+      "sha256": "b035e8ac7284794154ba06150b0b9daeaa9f19a026137f4329d6cf76c3f4e934"
+    },
+    {
+      "path": "projects/我的第一个产品/docs/阶段文档/说明.md",
+      "sha256": "188baa58acfee052e542ba52e7d791c9ca3447520174f5053c66b98dacc6fc78"
+    },
+    {
+      "path": "verify.sh",
+      "sha256": "e13cf10d15f7017cd4afb028c1fe65d79e9168f77a9da60f2dcd6f8984d235f0"
+    },
+    {
+      "path": "开始看这里.md",
+      "sha256": "e0332dbe0b6270ea30f85419545526221fb48e627321cbf711528b8a3d33f390"
+    }
+  ]
+}

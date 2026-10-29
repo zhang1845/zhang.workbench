@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module'
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
@@ -491,6 +491,21 @@ describe('the shipped Web composition', () => {
           })
           expect(loaded.isError, JSON.stringify(loaded.content)).toBe(false)
           expect(JSON.stringify(loaded.content)).toContain('## 工作台中的文档操作')
+          if (name === 'ai-product-starter') {
+            expect(JSON.stringify(loaded.content)).toContain('references/starter-kit.md')
+            const file = join(WEB_BUNDLE, 'skills', name, 'assets/starter-kit/docs/PRD模板.md')
+            const resource = await ctx.tools.execute({
+              callId: ToolCallId(`read-${preset}-starter-template`),
+              name: preset === 'ptc' ? 'run_code' : 'read',
+              arguments: preset === 'ptc'
+                ? { description: 'Read the bundled PRD template', code: `return await tools.read({ file_path: ${JSON.stringify(file)} });` }
+                : { file_path: file },
+              signal: new AbortController().signal, agent: handle.agent,
+            })
+            expect(resource.isError, JSON.stringify(resource.content)).toBe(false)
+            expect(JSON.stringify(resource.content)).toContain('目标用户与核心任务')
+            expect(JSON.stringify(resource.content)).toContain('上线与账号')
+          }
         }
       } finally {
         await handle.dispose()
@@ -506,22 +521,24 @@ describe('the shipped Web composition', () => {
     for (const name of readdirSync(root).filter(item => item.startsWith('aipm-') || ['agent-blueprint', 'ai-product-starter'].includes(item))) {
       const directory = join(root, name)
       for (const file of readdirSync(directory, { recursive: true, encoding: 'utf8' }).filter(item => item.endsWith('.md'))) {
+        // Imported originals retain their links; the source manifest pins their bytes.
+        if (file.replaceAll('\\', '/').startsWith('assets/starter-kit/')) continue
         const markdown = readFileSync(join(directory, file), 'utf8')
         for (const match of markdown.matchAll(/\]\(([^)]+)\)/gu)) {
           const target = match[1]!
           if (/^(?:https?:|#)/u.test(target)) continue
-          expect(statSync(join(dirname(join(directory, file)), target.split('#')[0]!)).isFile()).toBe(true)
+          expect(statSync(join(dirname(join(directory, file)), decodeURIComponent(target.split('#')[0]!))).isFile()).toBe(true)
         }
       }
     }
     expect(readFileSync(join(root, 'aipm-project-initiation/references/initiation-report.md'), 'utf8')).toContain('默认使用当前项目内的 Markdown')
   })
 
-  it('ships self-contained delivery skill resources and original licenses without local engine dependencies', () => {
+  it('ships self-contained workflows and an unchanged starter kit template without installing its tools', () => {
     const root = join(WEB_BUNDLE, 'skills')
     const resources = {
       'agent-blueprint': ['design.md', 'audit.md', 'iteration.md'],
-      'ai-product-starter': ['prd-and-state.md', 'engineering.md', 'frontend.md', 'deployment.md', 'gates.md'],
+      'ai-product-starter': ['prd-and-state.md', 'engineering.md', 'frontend.md', 'deployment.md', 'gates.md', 'starter-kit.md'],
     }
     for (const [name, references] of Object.entries(resources)) {
       const directory = join(root, name)
@@ -531,12 +548,31 @@ describe('the shipped Web composition', () => {
       expect(readdirSync(join(directory, 'references')).sort()).toEqual([...references].sort())
       for (const file of readdirSync(directory, { recursive: true, encoding: 'utf8' })) {
         if (!statSync(join(directory, file)).isFile()) continue
+        if (file.replaceAll('\\', '/').startsWith('assets/starter-kit/')) continue
         expect(file).not.toMatch(/\.(?:py|sh|command|env)$/u)
         expect(readFileSync(join(directory, file), 'utf8')).not.toContain('/Users/zhanglifu/')
       }
     }
     expect(readFileSync(join(root, 'agent-blueprint/LICENSE'), 'utf8')).toContain('Copyright (c) 2024 Hubo')
     expect(readFileSync(join(root, 'ai-product-starter/LICENSE'), 'utf8')).toContain('Copyright (c) 2025 hubooooooo')
+    const starter = join(root, 'ai-product-starter')
+    const manifest = JSON.parse(readFileSync(join(starter, 'SOURCE.json'), 'utf8')) as {
+      repository: string
+      revision: string
+      files: { path: string; sha256: string }[]
+    }
+    expect(manifest.repository).toBe('https://github.com/hubooooooo/ai-product-starter-kit')
+    expect(manifest.revision).toMatch(/^[a-f0-9]{40}$/u)
+    const snapshot = join(starter, 'assets/starter-kit')
+    const files = readdirSync(snapshot, { recursive: true, encoding: 'utf8' })
+      .filter(file => statSync(join(snapshot, file)).isFile()).map(file => file.replaceAll('\\', '/')).sort()
+    expect(files).toEqual(manifest.files.map(file => file.path).sort())
+    expect(files).toEqual(expect.arrayContaining(['AGENTS.md', '.gitignore.template', 'docs/PRD模板.md', 'verify.sh', 'LICENSE']))
+    for (const file of manifest.files) {
+      expect(createHash('sha256').update(readFileSync(join(snapshot, file.path))).digest('hex')).toBe(file.sha256)
+      expect(file.path).not.toMatch(/(?:^|\/)(?:node_modules|\.venv|\.git)(?:\/|$)/u)
+      expect(file.path).not.toMatch(/(?:^|\/)\.env(?:\.(?!example$).*)?$/u)
+    }
   })
 
   it('merges the global skill layer into a preset agent\'s catalog, keeping local discovery preset-side', async () => {

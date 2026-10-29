@@ -63,6 +63,8 @@ dsh --profile web --no-open --port 8080
 
 同一提供方还加载 `agent-blueprint` 和 `ai-product-starter`，随包工作台工作流共十二个。输入 `/agent-blueprint` 可做 Agent 架构、组件选型、带证据的差距检查或迭代计划；输入 `/ai-product-starter` 可做 PRD 体检、技术适配、分阶段 MVP/前端交付及部署准备。两者包含专用参考材料及原 MIT 许可（[Agent Blueprint](skills/agent-blueprint/LICENSE)、[AI Product Starter Kit](skills/ai-product-starter/LICENSE)）。它们是方法适配，不是原引擎或运行时安装：使用当前模型、保留既有技术栈与提供商、不增加部署权限。文档项目通过审阅提交根目录内独立的 Markdown/文本；不能执行代码时交付方案与交接清单，不声称已经实现或验证。
 
+`/ai-product-starter` 工作流包含完整原始 [AI Product Starter Kit](https://github.com/hubooooooo/ai-product-starter-kit)，作为离线参考与新工程模板。[来源清单](skills/ai-product-starter/SOURCE.json)记录版本和文件校验值；包括文档在内的原始文件内容保留原文且不修改。Git 忽略规则以 `.gitignore.template` 随包提供，创建工程时恢复文件名。使用 PRD 模板、手册或 CloudBase 示例前，先读[工作台与 Windows 适配说明](skills/ai-product-starter/references/starter-kit.md)。原工具包面向 macOS；其脚本仅为参考资源，不作为自动启动或部署步骤。Windows 工程使用自己的原生验证命令，文档项目仍先预览、再确认保存。
+
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-app)列出了本运行时插件接受的字段及其 JSDoc。随发行版交付的组合插入 `schedule` 服务行与 `ui-schedule` 任务页面行，时钟读数与四个提醒工具则属于 `standard`、`cordis` 与 `ptc` 三个 preset。这三个 preset 的 `tool-subagent` 与 `tool-subagent-fork` 两行都 deny 这四个工具，因此被委派子 agent 的作用域不会列出它们。
 
 Windows 下项目和文档名称会在访问磁盘前拒绝设备保留名、文件名禁用字符及末尾句点；macOS 名称沿用原有规则。读取会显式拒绝符号链接并核对打开后的文件标识，也覆盖不支持 `O_NOFOLLOW` 的宿主系统。Windows 命名规则依据 [Microsoft 文件命名参考](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file)。

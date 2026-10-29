@@ -1,5 +1,7 @@
 /** Workbench-owned Chinese dictionary. */
 export const siminZh = {
+  starterTitle: '产品工具包', starterDescription: '梳理需求、规划 MVP，按阶段推进你的产品', starterStart: '开始使用', starterNewProject: '新建项目开始',
+  starterPrompt: '/ai-product-starter 请先阅读当前项目已有的 PRD、项目状态和文档，从已有进展继续；如果是新项目，请和我一起明确目标用户、核心需求和最小可用版本。信息不足时先提问，文档仍通过工作台预览确认后保存。',
   legacyWorkspaces: '原有工作区与会话', legacyHint: '查看改造前的工作区和会话，原文件位置保持不变',
   stage: '本阶段', stageUnset: '尚未接入', stageHint: '流程尚未接入。阶段名称会在 Skill 接入后出现。', evidenceGaps: '待补充证据', noGaps: '暂无缺口', stageBusy: '正在写入…', stageConfirm: '确认本阶段', stageBlocked: '证据补齐后才能确认，并进入下一阶段。', stageSaved: '本阶段已确认。', productLabel: '产品',
   'brand.localBuild': 'zhang.workbench', brand: 'zhang.workbench', avatar: 'Z', personal: '个人工作台', home: '工作台', documents: '全部文档', templates: '模板', trash: '回收站', settings: '设置',
@@ -27,6 +29,8 @@ export const siminZh = {
 export type SiminKey = keyof typeof siminZh
 /** English workbench dictionary. */
 export const siminEn: Record<SiminKey, string> = {
+  starterTitle: 'Product Toolkit', starterDescription: 'Clarify requirements, plan an MVP, and develop your product in stages', starterStart: 'Get started', starterNewProject: 'Start a new project',
+  starterPrompt: '/ai-product-starter Read this project\'s existing PRD, status and documents, and continue from its current progress. For a new project, help me clarify the target users, core requirements and minimum viable product. Ask about missing information, and preserve document preview and confirmation before saving.',
   legacyWorkspaces: 'Existing workspaces and sessions', legacyHint: 'Open previous workspaces and conversations without moving their files',
   stage: 'Current stage', stageUnset: 'Not connected', stageHint: 'Stage names appear after Skills are connected.', evidenceGaps: 'Missing evidence', noGaps: 'No gaps', stageBusy: 'Saving…', stageConfirm: 'Confirm stage', stageBlocked: 'Fill evidence gaps before confirming the next stage.', stageSaved: 'Stage confirmed.', productLabel: 'Product',
   'brand.localBuild': 'zhang.workbench', brand: 'zhang.workbench', avatar: 'Z', personal: 'Personal workbench', home: 'Workbench', documents: 'All documents', templates: 'Templates', trash: 'Trash', settings: 'Settings',

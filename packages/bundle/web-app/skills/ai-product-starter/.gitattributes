@@ -1,0 +1,3 @@
+assets/starter-kit/** -text
+# Keep the upstream manual's trailing blank line; SOURCE.json pins its exact bytes.
+"assets/starter-kit/docs/手册/AI产品Vibe Coding通用技术栈手册.md" whitespace=-blank-at-eof
